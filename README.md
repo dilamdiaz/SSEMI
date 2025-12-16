@@ -126,7 +126,7 @@ Notas:
 Desde la carpeta `Backend/` con el entorno virtual activo:
 
 ```powershell
-uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+uvicorn app.main:app --reload
 ```
 
 La API quedará disponible en:
