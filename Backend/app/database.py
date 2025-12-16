@@ -13,11 +13,12 @@ DB_HOST = os.getenv("DB_HOST")
 DB_PORT = os.getenv("DB_PORT", "11089")
 DB_NAME = os.getenv("DB_NAME")
 
-# 🔐 Aiven requiere SSL
+# ✅ SSL Aiven (sin verificación de CA)
 SQLALCHEMY_DATABASE_URL = (
     f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}"
     f"@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-    "?ssl_ca=/etc/ssl/certs/ca-certificates.crt"
+    "?ssl_disabled=false"
+    "&ssl_verify_cert=false"
 )
 
 engine = create_engine(
@@ -34,7 +35,6 @@ SessionLocal = sessionmaker(
 
 Base = declarative_base()
 
-# Dependencia para obtener sesión de BD en endpoints
 def get_db():
     db = SessionLocal()
     try:
