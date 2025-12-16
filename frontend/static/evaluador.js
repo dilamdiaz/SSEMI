@@ -153,15 +153,24 @@ async function cargarEvidenciaDetalle(id) {
 document.getElementById("formEvaluacion")?.addEventListener("submit", async e => {
     e.preventDefault();
 
-    const formData = new FormData(e.target);
-
+    const form = e.target;
     const token = localStorage.getItem("ssemi_token");
     if (!token) return alert("❌ No autenticado. Inicia sesión para calificar evidencias.");
 
+    // Extraer campos esperados por el backend
+    const puntajeVal = form.querySelector('#puntaje')?.value || form.querySelector('[name="puntaje"]')?.value || "";
+    const observacionVal = form.querySelector('#observacion')?.value || form.querySelector('[name="observacion"]')?.value || "";
+
+    const payload = {
+        puntaje: puntajeVal !== "" ? parseFloat(puntajeVal) : null,
+        observacion: observacionVal
+    };
+
     const res = await fetch(`${API_BASE}/evidencia/${evidenciaSeleccionada}`, {
         method: "POST",
-        body: formData,
+        body: JSON.stringify(payload),
         headers: {
+            "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`
         }
     });
@@ -185,15 +194,23 @@ document.getElementById("formEvaluacion")?.addEventListener("submit", async e =>
 //  GUARDAR AVANCE PARCIAL
 // ======================================================
 async function guardarAvanceParcial() {
-    const formData = new FormData(document.getElementById("formEvaluacion"));
-
+    const form = document.getElementById("formEvaluacion");
     const token = localStorage.getItem("ssemi_token");
     if (!token) return alert("❌ No autenticado. Inicia sesión para guardar avances.");
 
+    const puntajeVal = form.querySelector('#puntaje')?.value || form.querySelector('[name="puntaje"]')?.value || "";
+    const observacionVal = form.querySelector('#observacion')?.value || form.querySelector('[name="observacion"]')?.value || "";
+
+    const payload = {
+        puntaje: puntajeVal !== "" ? parseFloat(puntajeVal) : null,
+        observacion: observacionVal
+    };
+
     const res = await fetch(`${API_BASE}/evidencia/${evidenciaSeleccionada}/parcial`, {
         method: "POST",
-        body: formData,
+        body: JSON.stringify(payload),
         headers: {
+            "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`
         }
     });
