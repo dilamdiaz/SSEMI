@@ -1,4 +1,3 @@
-const API_BASE = API_URL;
 if (typeof apiFetch === 'undefined') console.warn('apiFetch not loaded. Ensure /js/api.js is included before this script.');
 
 /* ========= UTILIDADES ========= */

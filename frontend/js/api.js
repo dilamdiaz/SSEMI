@@ -1,33 +1,31 @@
-// api.js
-const API_URL = "https://ssemi.onrender.com";
+// api.js (GLOBAL)
 
-async function apiFetch(endpoint, method = "GET", data = null) {
-  const token = localStorage.getItem("ssemi_token");
+window.API_URL = "https://ssemi.onrender.com";
 
-  const headers = { "Content-Type": "application/json" };
-  if (token) headers["Authorization"] = `Bearer ${token}`;
-
+window.apiFetch = async function (endpoint, method = "GET", data = null) {
   const options = {
     method,
-    headers,
+    headers: {
+      "Content-Type": "application/json"
+    },
     credentials: "include"
   };
 
-  if (data !== null && data !== undefined) {
+  if (data) {
     options.body = JSON.stringify(data);
   }
 
-  // Allow passing full URLs or endpoints starting with '/'
-  const url = endpoint.startsWith("http") ? endpoint : `${API_URL}${endpoint}`;
-
-  const response = await fetch(url, options);
-
-  let parsed = null;
-  try { parsed = await response.json(); } catch { parsed = null; }
+  const response = await fetch(API_URL + endpoint, options);
 
   if (!response.ok) {
-    throw parsed || { detail: `HTTP ${response.status}` };
+    let error;
+    try {
+      error = await response.json();
+    } catch {
+      error = { detail: "Error de red" };
+    }
+    throw error;
   }
 
-  return parsed;
-}
+  return response.json();
+};
