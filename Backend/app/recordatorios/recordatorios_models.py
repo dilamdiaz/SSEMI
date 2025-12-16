@@ -14,5 +14,7 @@ class Notificacion(Base):
     mensaje = Column(String(1000), nullable=False)
     fecha_envio = Column(DateTime, default=func.now())
     leida = Column(Boolean, default=False)
-    # Asume que existe una tabla 'tarea' con primary key 'id_tarea'
-    tarea_id_tarea = Column(Integer, ForeignKey('tarea.id_tarea'), nullable=False)
+    # Relación a una tarea (si no existe el modelo 'tarea' en este proyecto,
+    # evitamos crear una FK para no romper `create_all`).
+    # Si tu proyecto tiene un modelo `tarea`, reemplaza por ForeignKey('tarea.id_tarea').
+    tarea_id_tarea = Column(Integer, nullable=True)
