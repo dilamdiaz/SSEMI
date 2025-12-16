@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Notificaciones - SSEMI</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Fuente -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --orange: #ff9800;
+      --orange-dark: #e67e00;
+      --light: #ffffff;
+      --gray-light: #f8f9fa;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--gray-light);
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* 🔸 Topbar */
+    .topbar {
+      background: var(--orange);
+      color: var(--light);
+      padding: 15px 30px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .topbar a {
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      margin: 0 10px;
+      transition: color 0.2s ease;
+    }
+
+    .topbar a:hover {
+      color: #fff2e0;
+    }
+
+    /* 🔸 Contenido */
+    main {
+      flex: 1;
+      max-width: 900px;
+      margin: 2rem auto 3rem;
+      background: white;
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+    }
+
+    h1 {
+      color: var(--orange);
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    h2 {
+      color: var(--orange-dark);
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    /* 🔸 Formularios */
+    form label {
+      font-weight: 600;
+      margin-top: 0.5rem;
+    }
+
+    form input, form textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      margin-top: 0.3rem;
+      margin-bottom: 1rem;
+      transition: all 0.2s ease;
+    }
+
+    form input:focus, form textarea:focus {
+      border-color: var(--orange);
+      box-shadow: 0 0 6px rgba(255,152,0,0.3);
+      outline: none;
+    }
+
+    /* 🔸 Botones */
+    .btn-orange {
+      background: var(--orange);
+      color: var(--light);
+      font-weight: 600;
+      border-radius: 10px;
+      border: none;
+      padding: 10px 16px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-orange:hover {
+      background: var(--orange-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(255,152,0,0.4);
+    }
+
+    /* 🔸 Lista */
+    ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    ul li {
+      background: var(--gray-light);
+      margin-bottom: 0.75rem;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    ul li strong {
+      color: var(--orange-dark);
+    }
+
+    #notifMessage {
+      margin-top: 10px;
+      font-weight: 600;
+    }
+
+    footer {
+      background: var(--orange);
+      color: var(--light);
+      text-align: center;
+      padding: 12px 0;
+      font-size: 0.9rem;
+      margin-top: auto;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 🔸 Barra superior -->
+  <header class="topbar">
+    <div>
+      <a href="/">🏠 Inicio</a>
+      <a href="/dashboard/admin">📋 Panel</a>
+    </div>
+    <span>Sistema SSEMI</span>
+  </header>
+
+  <!-- 🔸 Contenido principal -->
+  <main class="container">
+    <h1>📢 Notificaciones</h1>
+
+    <!-- Crear notificación -->
+    <section>
+      <form id="formCrearNotificacion">
+        <div class="mb-3">
+          <label for="notifUsuario">Usuario destino (ID)</label>
+          <input id="notifUsuario" type="number" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="notifTitulo">Título</label>
+          <input id="notifTitulo" type="text" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="notifContenido">Contenido</label>
+          <textarea id="notifContenido" class="form-control" rows="3" placeholder="Escribe el mensaje..."></textarea>
+        </div>
+
+        <button type="submit" class="btn-orange">Enviar notificación</button>
+        <div id="notifMessage" class="mt-2"></div>
+      </form>
+    </section>
+
+    <hr class="my-4">
+
+    <!-- Mis notificaciones -->
+    <section>
+      <div class="d-flex justify-content-between align-items-center">
+        <h2>🔔 Mis notificaciones</h2>
+        <button id="btnListarNotifs" class="btn-orange">Actualizar</button>
+      </div>
+
+      <ul id="listaNotifs" class="mt-3">
+        <li class="text-muted text-center">No hay notificaciones por ahora.</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer>© 2025 Sistema SSEMI | Todos los derechos reservados</footer>
+
+  <!-- 🔸 Script -->
+  <script>
+    const API_URL = "http://127.0.0.1:8000";
+    const token = localStorage.getItem("ssemi_token");
+    const form = document.getElementById("formCrearNotificacion");
+    const lista = document.getElementById("listaNotifs");
+    const messageBox = document.getElementById("notifMessage");
+
+    // Crear notificación
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const usuario = document.getElementById("notifUsuario").value.trim();
+      const titulo = document.getElementById("notifTitulo").value.trim();
+      const contenido = document.getElementById("notifContenido").value.trim();
+
+      if (!usuario || !titulo || !contenido) {
+        messageBox.textContent = "⚠️ Completa todos los campos.";
+        messageBox.style.color = "red";
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_URL}/notificaciones/`, {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id_usuario_fk: usuario,
+            titulo: titulo,
+            contenido: contenido,
+          }),
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+          messageBox.textContent = "✅ Notificación enviada correctamente.";
+          messageBox.style.color = "green";
+          form.reset();
+        } else {
+          messageBox.textContent = "❌ " + (data.detail || "Error al enviar.");
+          messageBox.style.color = "red";
+        }
+      } catch (error) {
+        messageBox.textContent = "❌ Error de conexión con el servidor.";
+        messageBox.style.color = "red";
+      }
+    });
+
+    // Listar notificaciones
+    document.getElementById("btnListarNotifs").addEventListener("click", async () => {
+      try {
+        const res = await fetch(`${API_URL}/notificaciones/`, {
+          headers: { "Authorization": `Bearer ${token}` },
+        });
+        const data = await res.json();
+
+        lista.innerHTML = "";
+        if (data.length === 0) {
+          lista.innerHTML = "<li class='text-muted text-center'>No tienes notificaciones.</li>";
+          return;
+        }
+
+        data.forEach(n => {
+          const item = document.createElement("li");
+          item.innerHTML = `<strong>${n.titulo}</strong><br>${n.contenido}<br>
+            <small class="text-muted">${new Date(n.fecha).toLocaleString()}</small>`;
+          lista.appendChild(item);
+        });
+      } catch (error) {
+        lista.innerHTML = "<li class='text-danger text-center'>Error al cargar notificaciones.</li>";
+      }
+    });
+  </script>
+</body>
+</html>

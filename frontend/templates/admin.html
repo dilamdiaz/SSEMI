@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel Administrador SSEMI</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <style>
+    /* ===================== VARIABLES ===================== */
+    :root {
+      --ssemi-orange: #ff6600;
+      --ssemi-orange-hover: #e65500;
+      --ssemi-orange-light: #ff8533;
+      --ssemi-orange-bg: rgba(255, 102, 0, 0.1);
+      --ssemi-bg-gradient: linear-gradient(135deg, #fff8f3 0%, #fff 100%);
+      --sidebar-width: 280px;
+      --navbar-height: 70px;
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.12);
+      --shadow-lg: 0 8px 24px rgba(255, 102, 0, 0.2);
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* ===================== BOTONES DE BANDEJA DE MENSAJES ===================== */
+    #mensajesSection .nav-tabs .nav-link {
+      background: var(--ssemi-orange);
+      color: white !important;
+      font-weight: 700;
+      border-radius: 0.6rem 0.6rem 0 0;
+      border: none;
+      transition: var(--transition);
+    }
+
+    #mensajesSection .nav-tabs .nav-link:hover {
+      background: var(--ssemi-orange-hover);
+      color: white !important;
+    }
+
+    #mensajesSection .nav-tabs .nav-link.active {
+      background: var(--ssemi-orange-light);
+      color: white !important;
+      border: none;
+      box-shadow: var(--shadow-md);
+    }
+
+    /* Botones dentro de la bandeja */
+    #mensajesSection button,
+    #mensajesSection .btn {
+      background: linear-gradient(135deg, var(--ssemi-orange) 0%, var(--ssemi-orange-light) 100%);
+      color: white !important;
+      border: none;
+      font-weight: 700;
+      border-radius: 0.6rem;
+      transition: var(--transition);
+    }
+
+    #mensajesSection button:hover,
+    #mensajesSection .btn:hover {
+      background: var(--ssemi-orange-hover);
+      transform: translateY(-2px);
+      color: white !important;
+      box-shadow: var(--shadow-lg);
+    }
+
+    /* ===================== X DEL MODAL EN NARANJA ===================== */
+    .modal-header .btn-close {
+      background: none !important;
+      /* sin fondo raro */
+      position: relative;
+      width: 20px !important;
+      height: 20px !important;
+      opacity: 1 !important;
+      filter: none !important;
+      /* sin filtros */
+    }
+
+    /* Crear la X naranja REAL y en su sitio */
+    .modal-header .btn-close::before {
+      content: '✕';
+      font-size: 22px;
+      color: white;
+      font-weight: 900;
+      position: absolute;
+      top: -4px;
+      /* ajusta posicion */
+      left: -2px;
+    }
+
+    /* Ocultar el ícono original de Bootstrap */
+    .modal-header .btn-close svg,
+    .modal-header .btn-close::after {
+      display: none !important;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--ssemi-bg-gradient);
+      overflow-x: hidden;
+    }
+
+    /* ===================== NAVBAR ===================== */
+    .modern-navbar {
+      background: linear-gradient(135deg, var(--ssemi-orange) 0%, var(--ssemi-orange-light) 100%);
+      height: var(--navbar-height);
+      box-shadow: 0 4px 16px rgba(255, 102, 0, 0.3);
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      backdrop-filter: blur(6px);
+    }
+
+    .modern-navbar .navbar-brand {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: white !important;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: var(--transition);
+    }
+
+    .modern-navbar .btn-nav {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: white;
+      font-weight: 600;
+      padding: 0.45rem 1rem;
+      border-radius: 50px;
+      transition: var(--transition);
+      backdrop-filter: blur(6px);
+    }
+
+    .modern-navbar .btn-nav:hover {
+      background: white;
+      color: var(--ssemi-orange);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    }
+
+    /* ===================== HEADER DEL MODAL DE MENSAJES ===================== */
+    .modal-header {
+      background: linear-gradient(135deg, var(--ssemi-orange) 0%, var(--ssemi-orange-light) 100%) !important;
+      color: white !important;
+      border-top-left-radius: 0.6rem !important;
+      border-top-right-radius: 0.6rem !important;
+    }
+
+    /* ===================== SIDEBAR ===================== */
+    .modern-sidebar {
+      position: fixed;
+      left: 0;
+      top: var(--navbar-height);
+      width: var(--sidebar-width);
+      height: calc(100vh - var(--navbar-height));
+      background: white;
+      box-shadow: var(--shadow-md);
+      padding: 2rem 1rem;
+      overflow-y: auto;
+      z-index: 900;
+      transition: var(--transition);
+    }
+
+    .sidebar-card {
+      background: linear-gradient(135deg, var(--ssemi-orange-bg) 0%, transparent 100%);
+      border: 2px solid transparent;
+      border-radius: 1rem;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+      cursor: pointer;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .sidebar-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 102, 0, 0.06), transparent);
+      transition: var(--transition);
+    }
+
+    .sidebar-card:hover::before {
+      left: 100%;
+    }
+
+    .sidebar-card:hover {
+      border-color: var(--ssemi-orange);
+      transform: translateX(8px);
+      box-shadow: var(--shadow-lg);
+      background: linear-gradient(135deg, var(--ssemi-orange) 0%, var(--ssemi-orange-light) 100%);
+    }
+
+    .sidebar-card.active {
+      background: linear-gradient(135deg, var(--ssemi-orange) 0%, var(--ssemi-orange-light) 100%);
+      border-color: var(--ssemi-orange);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .sidebar-icon {
+      font-size: 1.7rem;
+      color: var(--ssemi-orange);
+      transition: var(--transition);
+    }
+
+    .sidebar-text {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #333;
+      transition: var(--transition);
+    }
+
+    .sidebar-card:hover .sidebar-icon,
+    .sidebar-card:hover .sidebar-text,
+    .sidebar-card.active .sidebar-icon,
+    .sidebar-card.active .sidebar-text {
+      color: white;
+    }
+
+    /* ===================== CONTENIDO PRINCIPAL ===================== */
+    .main-content {
+      margin-left: var(--sidebar-width);
+      margin-top: var(--navbar-height);
+      padding: 2rem;
+      min-height: calc(100vh - var(--navbar-height));
+    }
+
+    .content-section {
+      background: white;
+      border-radius: 1.25rem;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-md);
+      animation: fadeInUp 0.45s ease;
+      margin-bottom: 1.25rem;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .section-title {
+      color: var(--ssemi-orange);
+      font-weight: 800;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .section-title::before {
+      content: '';
+      width: 4px;
+      height: 1.8rem;
+      background: linear-gradient(180deg, var(--ssemi-orange) 0%, var(--ssemi-orange-light) 100%);
+      border-radius: 10px;
+    }
+
+    /* ===================== BOTONES ===================== */
+    .btn-modern {
+      background: linear-gradient(135deg, var(--ssemi-orange) 0%, var(--ssemi-orange-light) 100%);
+      border: none;
+      color: white;
+      font-weight: 700;
+      padding: 0.6rem 1rem;
+      border-radius: 0.6rem;
+      transition: var(--transition);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn-modern:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+      color: white;
+    }
+
+    /* ===================== RESPONSIVE ===================== */
+    @media (max-width: 992px) {
+      .modern-sidebar {
+        transform: translateX(-100%);
+      }
+
+      .modern-sidebar.show {
+        transform: translateX(0);
+      }
+
+      .main-content {
+        margin-left: 0;
+      }
+
+      :root {
+        --sidebar-width: 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Contenedor de Toasts -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastContainer"></div>
+
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg modern-navbar">
+    <div class="container-fluid px-4">
+      <a class="navbar-brand" href="#">🎯 Panel Administrador SSEMI</a>
+      <div class="d-flex gap-2">
+        <button class="btn btn-nav" id="btnPerfil">👤 Perfil</button>
+        <button class="btn btn-nav" onclick="logout()">🚪 Cerrar sesión</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- SIDEBAR -->
+  <aside class="modern-sidebar">
+    <div class="sidebar-card active" onclick="mostrarUsuariosPanel(); mostrarSeccion('usuarios')">
+      <div class="text-center">
+        <div class="sidebar-icon">👥</div>
+        <div class="sidebar-text">Usuarios</div>
+      </div>
+    </div>
+    <div class="sidebar-card" onclick="mostrarSolicitudesPanel(); mostrarSeccion('solicitudes')">
+      <div class="text-center">
+        <div class="sidebar-icon">📩</div>
+        <div class="sidebar-text">Solicitudes</div>
+      </div>
+    </div>
+    <div class="sidebar-card" onclick="mostrarReportesPanel(); mostrarSeccion('reportes')">
+      <div class="text-center">
+        <div class="sidebar-icon">📊</div>
+        <div class="sidebar-text">Reportes</div>
+      </div>
+    </div>
+    <div class="sidebar-card" onclick="mostrarComitePanel(); mostrarSeccion('comite')">
+      <div class="text-center">
+        <div class="sidebar-icon">🏛️</div>
+        <div class="sidebar-text">Comité Nacional</div>
+      </div>
+    </div>
+    <div class="sidebar-card" onclick="mostrarMensajesPanel(); mostrarSeccion('mensajes')">
+      <div class="text-center">
+        <div class="sidebar-icon">📬</div>
+        <div class="sidebar-text">Bandeja de Mensajes</div>
+      </div>
+    </div>
+    <div class="sidebar-card" onclick="mostrarSeccion('bitacora')">
+      <div class="text-center">
+        <div class="sidebar-icon">🧾</div>
+        <div class="sidebar-text">Bitácora</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="main-content">
+    <!-- SECCIÓN: USUARIOS -->
+    <section id="usuariosSection" class="content-section">
+      <h2 class="section-title"><span>👥</span> Gestión de Usuarios</h2>
+
+      <div class="filter-container">
+        <div class="row g-3 align-items-end">
+          <!-- Búsqueda general -->
+          <div class="col-md-4">
+            <label class="form-label fw-bold" for="busquedaUsuarios">Búsqueda</label>
+            <input class="form-control modern-input" type="text" id="busquedaUsuarios"
+              placeholder="Buscar por nombre, correo, documento, grado o regional..." />
+          </div>
+
+          <!-- Filtro Grado -->
+          <div class="col-md-2">
+            <label class="form-label fw-bold" for="filtroGrado">Grado</label>
+            <select class="form-select modern-select" id="filtroGrado">
+              <option value="">Todos los grados</option>
+              <option value="Grado 1">Grado 1</option>
+              <option value="Grado 2">Grado 2</option>
+              <option value="Grado 3">Grado 3</option>
+              <option value="Grado 4">Grado 4</option>
+              <option value="Grado 5">Grado 5</option>
+              <option value="Grado 6">Grado 6</option>
+              <option value="Grado 7">Grado 7</option>
+              <option value="Grado 8">Grado 8</option>
+              <option value="Grado 9">Grado 9</option>
+              <option value="Grado 10">Grado 10</option>
+              <option value="Grado 11">Grado 11</option>
+              <option value="Grado 12">Grado 12</option>
+              <option value="Grado 13">Grado 13</option>
+              <option value="Grado 14">Grado 14</option>
+              <option value="Grado 15">Grado 15</option>
+              <option value="Grado 16">Grado 16</option>
+              <option value="Grado 17">Grado 17</option>
+              <option value="Grado 18">Grado 18</option>
+              <option value="Grado 19">Grado 19</option>
+              <option value="Grado 20">Grado 20</option>
+            </select>
+          </div>
+
+          <!-- Filtro Regional -->
+          <div class="col-md-2">
+            <label class="form-label fw-bold" for="filtroRegional">Regional</label>
+            <select class="form-select modern-select" id="filtroRegional">
+              <option value="">Todas las regionales</option>
+              <option value="Distrito Capital">Distrito Capital</option>
+              <!-- agrega más regionales si es necesario -->
+            </select>
+          </div>
+
+          <!-- Filtro Rol -->
+          <div class="col-md-2">
+            <label class="form-label fw-bold" for="filtroRol">Rol</label>
+            <select class="form-select modern-select" id="filtroRol">
+              <option value="">Todos los roles</option>
+              <option value="1">Instructor</option>
+              <option value="2">Administrador</option>
+              <option value="3">Evaluador</option>
+            </select>
+          </div>
+
+          <!-- Filtro Estado -->
+          <div class="col-md-2">
+            <label class="form-label fw-bold" for="filtroEstado">Estado</label>
+            <select class="form-select modern-select" id="filtroEstado">
+              <option value="">Todos</option>
+              <option value="true">Activo</option>
+              <option value="false">Inactivo</option>
+            </select>
+          </div>
+
+          <!-- Botón Buscar -->
+          <div class="col-md-2">
+            <button class="btn btn-modern w-100" onclick="filtrarUsuarios()">🔍 Buscar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabla de usuarios -->
+      <div class="table-responsive">
+        <table class="table modern-table" id="usuariosTable">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre Completo</th>
+              <th>Correo</th>
+              <th>Documento</th>
+              <th>Rol</th>
+              <th>Grado</th>
+              <th>Regional</th>
+              <th>Estado</th>
+              <th class="text-center">Acciones</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECCIÓN: SOLICITUDES -->
+    <section id="solicitudesSection" class="content-section" style="display:none;">
+      <h2 class="section-title"><span>📩</span> Solicitudes de Corrección</h2>
+
+      <div class="filter-container">
+        <div class="row g-3 align-items-end">
+          <div class="col-md-4">
+            <label class="form-label fw-bold" for="busquedaSolicitudes">Búsqueda</label>
+            <input type="text" id="busquedaSolicitudes" class="form-control modern-input"
+              placeholder="Buscar por usuario, campo o motivo..." />
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label fw-bold" for="filtroCampoSolicitud">Campo</label>
+            <select id="filtroCampoSolicitud" class="form-select modern-select">
+              <option value="">Todos</option>
+              <option value="primer_nombre">Primer Nombre</option>
+              <option value="segundo_nombre">Segundo Nombre</option>
+              <option value="primer_apellido">Primer Apellido</option>
+              <option value="segundo_apellido">Segundo Apellido</option>
+              <option value="numero_documento">Número de Documento</option>
+              <option value="tipo_documento">Tipo de Documento</option>
+              <option value="correo">Correo Electrónico</option>
+              <option value="numero_contacto">Número de Contacto</option>
+              <option value="direccion">Dirección</option>
+              <option value="grado">Grado</option>
+              <option value="regional">Regional</option>
+            </select>
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label fw-bold" for="filtroEstadoSolicitud">Estado</label>
+            <select id="filtroEstadoSolicitud" class="form-select modern-select">
+              <option value="">Todos</option>
+              <option value="Pendiente">Pendiente</option>
+              <option value="Aprobada">Aprobada</option>
+              <option value="Rechazada">Rechazada</option>
+            </select>
+          </div>
+
+          <div class="col-md-2">
+            <button class="btn btn-modern w-100" id="btnBuscarSolicitudes">🔍 Buscar</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table modern-table" id="solicitudesTable">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Usuario</th>
+              <th>Campo</th>
+              <th>Valor Actual</th>
+              <th>Nuevo Valor</th>
+              <th>Motivo</th>
+              <th>Estado</th>
+              <th class="text-center">Acciones</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECCIÓN: REPORTES -->
+    <section id="reportesSection" class="content-section" style="display:none;">
+      <h2 class="section-title"><span>📊</span> Reportes SSEMI</h2>
+
+      <!-- Selección de tipo de reporte y título -->
+      <div class="row g-3 align-items-end mb-3">
+        <div class="col-md-4">
+          <label class="form-label fw-bold" for="selectTipoReporte">Tipo de Reporte</label>
+          <select class="form-select modern-select" id="selectTipoReporte">
+            <option value="">Seleccione tipo de reporte</option>
+
+            <option value="usuarios">Usuarios</option>
+            <option value="evidencias">Evidencias</option>
+            <option value="evaluaciones">Evaluaciones</option>
+            <option value="solicitudes_correccion">Solicitudes de Corrección</option>
+            <option value="actividad_general">Actividad General</option>
+          </select>
+
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label fw-bold" for="inputTitulo">Título del Reporte</label>
+          <input type="text" class="form-control modern-input" id="inputTitulo"
+            placeholder="Ingrese título del reporte" />
+        </div>
+
+        <div class="col-md-4 d-grid">
+          <button class="btn btn-modern" id="btnGenerarReporte">📈 Generar Reporte</button>
+        </div>
+      </div>
+
+      <!-- Contenedor de filtros dinámicos -->
+      <div class="filter-container mb-3" id="filtrosContainer"></div>
+      <div class="d-grid gap-2 mb-3">
+        <button class="btn btn-secondary" id="btnAplicarFiltros">🔍 Aplicar Filtros</button>
+      </div>
+
+      <!-- Botones de exportación (solo info, export real desde historial) -->
+      <div class="d-flex gap-2 mb-3">
+        <button class="btn btn-success" id="btnExportExcel">📥 Exportar Excel</button>
+        <button class="btn btn-danger" id="btnExportPDF">📥 Exportar PDF</button>
+      </div>
+
+      <!-- Tarjetas de resumen dinámicas -->
+      <div class="summary-cards mb-4" id="tarjetasResumen" style="display:none;">
+        <div class="summary-card">
+          <div class="summary-card-value" id="resumen1">0</div>
+          <div class="summary-card-label" id="labelResumen1">Total</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-card-value" id="resumen2">0</div>
+          <div class="summary-card-label" id="labelResumen2">Promedio</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-card-value" id="resumen3">0%</div>
+          <div class="summary-card-label" id="labelResumen3">Tasa</div>
+        </div>
+      </div>
+
+      <!-- Tabla de datos del reporte -->
+      <div class="table-responsive mb-5" id="tablaDatosContainer">
+        <p>Seleccione un reporte y aplique filtros para ver los datos.</p>
+        <table class="table modern-table d-none" id="tablaDatosReporte">
+          <thead>
+            <tr id="tablaDatosHeader"></tr>
+          </thead>
+          <tbody id="tablaDatosBody"></tbody>
+        </table>
+      </div>
+
+      <!-- Historial de reportes -->
+      <h3 class="mt-5 mb-3" style="color: var(--ssemi-orange);">📜 Historial de Reportes</h3>
+      <div class="table-responsive">
+        <table class="table modern-table" id="tablaReportes">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Título</th>
+              <th>Tipo</th>
+              <th>Fecha Generación</th>
+              <th class="text-center">Acciones</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECCIÓN: COMITÉ NACIONAL -->
+    <section id="comiteSection" class="content-section" style="display:none;">
+      <h2 class="section-title">🏛️ Comité Nacional</h2>
+      <p>Gestión de evaluadores y su activación dentro del Comité Nacional.</p>
+
+      <!-- FILTROS -->
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <input type="text" id="busquedaComite" class="form-control" placeholder="Buscar por nombre o correo" />
+        </div>
+        <div class="col-md-4">
+          <select id="filtroComiteEstado" class="form-select">
+            <option value="">Todos</option>
+            <option value="true">Activo en Comité</option>
+            <option value="false">No en Comité</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table modern-table" id="comiteTable">
+          <thead>
+            <tr>
+              <th>ID Usuario</th>
+              <th>Nombre Completo</th>
+              <th>Correo</th>
+              <th>Comité Nacional</th>
+              <th class="text-center">Acciones</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECCIÓN: BANDEJA DE MENSAJES -->
+    <section id="mensajesSection" class="content-section" style="display:none;">
+      <h2 class="section-title"><span>📬</span> Bandeja de Mensajes - SSEMI</h2>
+      <p>Envío y recepción de mensajes entre instructores, administradores y comité nacional.</p>
+
+      <!-- Pestañas -->
+      <ul class="nav nav-tabs justify-content-center mb-3" id="tabsMensajes" role="tablist">
+        <li class="nav-item" role="presentation">
+          <a class="nav-link active" id="tabRecibidos" data-tab="recibidos" href="#" role="tab" aria-selected="true"><i
+              class="bi bi-inbox-fill"></i> Recibidos</a>
+        </li>
+        <li class="nav-item" role="presentation">
+          <a class="nav-link" id="tabEnviados" data-tab="enviados" href="#" role="tab" aria-selected="false"><i
+              class="bi bi-send-fill"></i> Enviados</a>
+        </li>
+      </ul>
+
+      <!-- Lista dinámica de mensajes -->
+      <div id="listaMensajes" class="mensajes-lista list-group">
+        <!-- Mensajes se cargarán aquí dinámicamente -->
+      </div>
+
+      <!-- Botón Redactar -->
+      <div class="d-flex justify-content-end my-3">
+        <button id="btnRedactar" class="btn btn-modern btn-primary">✉️ Nuevo mensaje</button>
+      </div>
+
+      <!-- Modal: Leer Mensaje -->
+      <div class="modal fade" id="modalLeerMensaje" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+          <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+              <h5 class="modal-title d-flex align-items-center" style="word-wrap: break-word;">
+                <i class="bi bi-envelope-open-fill me-2"></i>
+                <span id="modalAsunto"></span>
+              </h5>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                aria-label="Cerrar"></button>
+            </div>
+
+            <div class="modal-body">
+              <p>
+                <strong>Remitente:</strong> <span id="modalRemitente"></span>
+              </p>
+              <p>
+                <strong>Fecha:</strong> <span id="modalFecha"></span>
+              </p>
+              <hr />
+              <p id="modalContenido" style="white-space: pre-wrap; word-wrap: break-word;"></p>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+              <!-- Botón de responder -->
+              <button type="button" class="btn btn-primary" id="btnResponderModal" style="display:none;">✉️
+                Responder</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal: Redactar Mensaje -->
+      <div class="modal fade" id="modalRedactar" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+              <h5 class="modal-title"><i class="bi bi-pencil-square me-2"></i> Nuevo mensaje</h5>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                aria-label="Cerrar"></button>
+            </div>
+
+            <div class="modal-body">
+              <!-- Select destino rol -->
+              <div id="divDestino" class="mb-3">
+                <label for="destinoRol" class="form-label fw-bold">Enviar a:</label>
+                <select id="destinoRol" class="form-select">
+                  <option value="1">Instructores</option>
+                  <option value="2">Administradores</option>
+                  <option value="3">Comité Nacional</option>
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label for="nuevoAsunto" class="form-label fw-bold">Asunto:</label>
+                <input id="nuevoAsunto" type="text" class="form-control" placeholder="Asunto del mensaje" />
+              </div>
+
+              <div class="mb-3">
+                <label for="nuevoContenido" class="form-label fw-bold">Mensaje:</label>
+                <textarea id="nuevoContenido" rows="5" class="form-control"
+                  placeholder="Escribe tu mensaje aquí..."></textarea>
+              </div>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-success" id="btnEnviarMensaje">Enviar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN: BITÁCORA -->
+    <section id="bitacoraSection" class="content-section" style="display:none;">
+      <h2 class="section-title"><span>🧾</span> Bitácora del Sistema</h2>
+
+      <div class="mb-3 d-flex justify-content-between align-items-center">
+        <div>
+          <button class="btn btn-modern" id="btnRefrescarBitacora">🔄 Refrescar</button>
+        </div>
+        <div>
+          <small class="text-muted">Muestra acciones registradas en la base de datos</small>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table modern-table" id="bitacoraTable">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Fecha</th>
+              <th>ID Usuario</th>
+              <th>Acción</th>
+              <th>Descripción</th>
+              <th>Tabla</th>
+              <th>ID Registro</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Lógica principal -->
+  </main>
+
+  <!-- MODALES -->
+
+  <!-- Modal Perfil Admin -->
+  <div class="modal fade" id="modalPerfil" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">👤 Mi Perfil</h5>
+          <button type="button" class="btn-close btn-close-black" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Primer Nombre</label>
+              <input class="form-control modern-input" id="perfilPrimerNombre" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Segundo Nombre</label>
+              <input class="form-control modern-input" id="perfilSegundoNombre" />
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Primer Apellido</label>
+              <input class="form-control modern-input" id="perfilPrimerApellido" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Segundo Apellido</label>
+              <input class="form-control modern-input" id="perfilSegundoApellido" />
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Tipo Documento</label>
+              <select class="form-select modern-select" id="perfilTipoDoc">
+                <option value="CC">CC</option>
+                <option value="CE">CE</option>
+              </select>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Documento</label>
+              <input class="form-control modern-input" id="perfilNumDoc" />
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Correo</label>
+              <input class="form-control modern-input" id="perfilCorreo" type="email" />
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Contacto</label>
+              <input class="form-control modern-input" id="perfilContacto" />
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Rol</label>
+              <select class="form-select modern-select" id="perfilRol">
+                <option value="1">Instructor</option>
+                <option value="2">Administrador</option>
+                <option value="3">Evaluador</option>
+              </select>
+            </div>
+
+            <!-- NUEVO CAMPO: GRADO -->
+            <div class="col-md-6">
+              <label class="form-label">Grado</label>
+              <select class="form-select modern-select" id="perfilGrado">
+                <option value="">(Sin grado)</option>
+                <option value="Grado 1">Grado 1</option>
+                <option value="Grado 2">Grado 2</option>
+                <option value="Grado 3">Grado 3</option>
+                <option value="Grado 4">Grado 4</option>
+                <option value="Grado 5">Grado 5</option>
+                <option value="Grado 6">Grado 6</option>
+                <option value="Grado 7">Grado 7</option>
+                <option value="Grado 8">Grado 8</option>
+                <option value="Grado 9">Grado 9</option>
+                <option value="Grado 10">Grado 10</option>
+                <option value="Grado 11">Grado 11</option>
+                <option value="Grado 12">Grado 12</option>
+                <option value="Grado 13">Grado 13</option>
+                <option value="Grado 14">Grado 14</option>
+                <option value="Grado 15">Grado 15</option>
+                <option value="Grado 16">Grado 16</option>
+                <option value="Grado 17">Grado 17</option>
+                <option value="Grado 18">Grado 18</option>
+                <option value="Grado 19">Grado 19</option>
+                <option value="Grado 20">Grado 20</option>
+              </select>
+            </div>
+
+            <!-- NUEVO CAMPO: REGIONAL -->
+            <div class="col-md-6">
+              <label class="form-label">Regional</label>
+              <select class="form-select modern-select" id="perfilRegional">
+                <option value="Distrito Capital">Distrito Capital</option>
+                <!-- puedes agregar más regionales aquí -->
+              </select>
+            </div>
+
+            <div class="col-mb-6">
+              <label class="form-label">Dirección</label>
+              <input class="form-control modern-input" id="perfilDireccion" />
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label">Estado</label>
+              <input class="form-control modern-input" id="perfilEstado" disabled />
+            </div>
+
+            <div class="col-12 mt-3">
+              <button class="btn btn-modern w-100" id="guardarPerfil">💾 Guardar Cambios</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Solicitud -->
+  <div class="modal fade" id="modalSolicitud" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">📋 Detalles de Solicitud</h5>
+          <button type="button" class="btn-close btn-close-black" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label fw-bold">Usuario:</label>
+            <p class="text-muted" id="solUsuario"></p>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-bold">Campo a modificar:</label>
+            <p class="text-muted" id="solCampo"></p>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-bold">Valor Actual:</label>
+            <p class="text-muted" id="solValorActual"></p>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-bold">Nuevo Valor:</label>
+            <p class="text-primary fw-bold" id="solNuevoValor"></p>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-bold">Motivo:</label>
+            <p class="text-muted" id="solMotivo"></p>
+          </div>
+          <div class="mb-4">
+            <label class="form-label fw-bold">Estado:</label>
+            <span id="solEstado" class="badge-modern badge-pending"></span>
+          </div>
+          <div class="row g-2">
+            <div class="col-6">
+              <button class="btn btn-success w-100 rounded-3" id="aprobarSolicitud" style="padding: 0.65rem;">✅
+                Aprobar</button>
+            </div>
+            <div class="col-6">
+              <button class="btn btn-danger w-100 rounded-3" id="rechazarSolicitud" style="padding: 0.65rem;">❌
+                Rechazar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Editar Usuario -->
+  <div class="modal fade" id="modalEditar" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">✏️ Editar Usuario</h5>
+          <button type="button" class="btn-close btn-close-black" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Primer Nombre</label>
+              <input class="form-control modern-input" id="editPrimerNombre" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Segundo Nombre</label>
+              <input class="form-control modern-input" id="editSegundoNombre" />
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Primer Apellido</label>
+              <input class="form-control modern-input" id="editPrimerApellido" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Segundo Apellido</label>
+              <input class="form-control modern-input" id="editSegundoApellido" />
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Tipo Documento</label>
+              <select class="form-select modern-select" id="editTipoDoc">
+                <option value="CC">CC</option>
+                <option value="CE">CE</option>
+              </select>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Número de Documento</label>
+              <input class="form-control modern-input" id="editNumDoc" />
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Correo Electrónico</label>
+              <input class="form-control modern-input" id="editCorreo" type="email" />
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Teléfono de Contacto</label>
+              <input class="form-control modern-input" id="editContacto" />
+            </div>
+
+            <!-- NUEVO CAMPO: GRADO -->
+            <div class="col-md-6">
+              <label class="form-label">Grado</label>
+              <select class="form-select modern-select" id="editGrado">
+                <option value="">(Sin grado)</option>
+                <option value="Grado 1">Grado 1</option>
+                <option value="Grado 2">Grado 2</option>
+                <option value="Grado 3">Grado 3</option>
+                <option value="Grado 4">Grado 4</option>
+                <option value="Grado 5">Grado 5</option>
+                <option value="Grado 6">Grado 6</option>
+                <option value="Grado 7">Grado 7</option>
+                <option value="Grado 8">Grado 8</option>
+                <option value="Grado 9">Grado 9</option>
+                <option value="Grado 10">Grado 10</option>
+                <option value="Grado 11">Grado 11</option>
+                <option value="Grado 12">Grado 12</option>
+                <option value="Grado 13">Grado 13</option>
+                <option value="Grado 14">Grado 14</option>
+                <option value="Grado 15">Grado 15</option>
+                <option value="Grado 16">Grado 16</option>
+                <option value="Grado 17">Grado 17</option>
+                <option value="Grado 18">Grado 18</option>
+                <option value="Grado 19">Grado 19</option>
+                <option value="Grado 20">Grado 20</option>
+              </select>
+            </div>
+
+            <!-- NUEVO CAMPO: REGIONAL -->
+            <div class="col-md-6">
+              <label class="form-label">Regional</label>
+              <select class="form-select modern-select" id="editRegional">
+                <option value="Distrito Capital">Distrito Capital</option>
+              </select>
+            </div>
+
+            <div class="col-md-8">
+              <label class="form-label">Dirección</label>
+              <input class="form-control modern-input" id="editDireccion" />
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label">Rol</label>
+              <select class="form-select modern-select" id="editRol">
+                <option value="1">Instructor</option>
+                <option value="2">Administrador</option>
+                <option value="3">Evaluador</option>
+              </select>
+            </div>
+
+            <div class="col-md-12">
+              <label class="form-label">Estado</label>
+              <select class="form-select modern-select" id="editEstado">
+                <option value="true">Activo</option>
+                <option value="false">Inactivo</option>
+              </select>
+            </div>
+
+            <div class="col-12 mt-3">
+              <button class="btn btn-modern w-100" id="guardarCambios">💾 Guardar Cambios</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Rechazar Solicitud -->
+  <div class="modal fade" id="modalRechazo" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">❌ Rechazar Solicitud</h5>
+          <button type="button" class="btn-close btn-close-black" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label fw-bold">Motivo de Rechazo:</label>
+            <textarea class="form-control modern-input" id="motivoRechazo" rows="4"
+              placeholder="Escribe el motivo del rechazo..."></textarea>
+          </div>
+          <button class="btn btn-danger w-100" id="confirmarRechazo">💣 Rechazar Solicitud</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOOTSTRAP JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Funciones auxiliares -->
+  <script>
+    // ======================================================
+    // NAVEGACIÓN ENTRE SECCIONES DEL PANEL
+    // ======================================================
+    function mostrarSeccion(seccion) {
+      ;['usuariosSection', 'solicitudesSection', 'reportesSection', 'comiteSection', 'mensajesSection', 'bitacoraSection'].forEach((id) => {
+        const el = document.getElementById(id)
+        if (el) el.style.display = 'none'
+      })
+
+      const sectionMap = {
+        usuarios: 'usuariosSection',
+        solicitudes: 'solicitudesSection',
+        reportes: 'reportesSection',
+        comite: 'comiteSection',
+        mensajes: 'mensajesSection',
+        bitacora: 'bitacoraSection'
+      }
+      const sel = document.getElementById(sectionMap[seccion])
+      if (sel) sel.style.display = 'block'
+
+      activarSidebarCard(seccion)
+      // Si es bitácora, intentar cargar los datos (si la función existe)
+      try{
+        if (seccion === 'bitacora' && typeof window.mostrarBitacora === 'function') {
+          window.mostrarBitacora()
+        }
+      }catch(e){ /* no bloquear la UI si falla */ }
+    }
+
+    // ======================================================
+    // ACTIVAR TARJETA CORRESPONDIENTE EN EL SIDEBAR
+    // ======================================================
+    function activarSidebarCard(seccion) {
+      document.querySelectorAll('.sidebar-card').forEach((c) => c.classList.remove('active'))
+
+      const map = {
+        usuarios: 0,
+        solicitudes: 1,
+        reportes: 2,
+        comite: 3,
+        mensajes: 4
+      }
+
+      const idx = map[seccion]
+      if (typeof idx !== 'undefined') {
+        const cards = document.querySelectorAll('.sidebar-card')
+        if (cards[idx]) cards[idx].classList.add('active')
+      }
+    }
+
+    // ======================================================
+    // FUNCIONES GLOBALES PARA ACCEDER A SECCIONES
+    // ======================================================
+    window.mostrarUsuariosPanel = () => mostrarSeccion('usuarios')
+    window.mostrarSolicitudesPanel = () => mostrarSeccion('solicitudes')
+    window.mostrarReportesPanel = () => mostrarSeccion('reportes')
+    window.mostrarComitePanel = () => mostrarSeccion('comite')
+    window.mostrarMensajesPanel = () => {
+      mostrarSeccion('mensajes')
+      if (typeof cargarMensajes === 'function') {
+        cargarMensajes('recibidos') // carga inmediata al abrir la sección
+      }
+    }
+
+    // ======================================================
+    // CIERRE DE SESIÓN
+    // ======================================================
+    function logout() {
+      localStorage.removeItem('ssemi_token')
+      window.location.href = '/login'
+    }
+  </script>
+
+  <!-- Scripts externos -->
+  <script src="../static/admin.js"></script>
+  <script src="../static/comite.js"></script>
+  <script src="../static/mensajes_admin.js"></script>
+  <script src="../static/reportes.js"></script>
+</body>
+
+</html>

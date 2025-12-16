@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Reportes - SSEMI</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a href="/">Inicio</a> | <a href="/dashboard/admin">Panel</a>
+  </header>
+
+  <main class="container">
+    <h1>Generar reportes</h1>
+
+    <section>
+      <form id="formGenerarReporte">
+        <label>Título: <input type="text" id="reporteTitulo" required></label>
+        <label>Tipo:
+          <select id="reporteTipo">
+            <option value="calificacion">Calificaciones</option>
+            <option value="evidencia">Evidencias</option>
+          </select>
+        </label>
+        <label>Formato:
+          <select id="reporteFormato">
+            <option value="pdf">PDF</option>
+            <option value="excel">Excel</option>
+          </select>
+        </label>
+        <button type="submit">Generar</button>
+      </form>
+      <div id="reporteMessage"></div>
+    </section>
+
+    <hr/>
+    <section>
+      <h2>Reportes generados</h2>
+      <button id="btnListarReportes">Listar reportes</button>
+      <ul id="listaReportes"></ul>
+    </section>
+  </main>
+
+  <script src="/static/script.js"></script>
+</body>
+</html>

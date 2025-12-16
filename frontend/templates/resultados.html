@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Resultados de Evaluación</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Exportar Excel + PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <style>
+    :root {
+      --ssemi-orange: #ff6600;
+      --ssemi-orange-light: #ff8533;
+      --ssemi-gradient: linear-gradient(135deg, #ff8533 0%, #ff8533 100%);
+      --ssemi-shadow: 0 4px 16px rgba(0,0,0,0.12);
+      --radius: 1rem;
+    }
+
+    body {
+      background: #f4f4f4;
+      font-family: 'Poppins', sans-serif;
+      padding-top: 90px;
+    }
+
+    /* Header */
+    /* ----- TOPBAR MODERNA SSEMI ----- */
+.topbar {
+    width: 100%;
+    height: 45px;
+    background-color: #f47c24;   /* naranja */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    box-sizing: border-box;
+    position: fixed;    /* queda fija arriba */
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    color: white;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+
+    .logo {
+      font-weight: 600;
+      font-size: 140%;
+      color: white;
+    }
+
+       .volver-btn {
+     
+      display: block;
+      
+      border: none;
+      background: var(--orange);
+      color: white;
+      font-weight: 600;
+      border-radius: 10px;
+      padding: 12px;
+      text-align: right;
+      transition: all 0.3s ease;
+    }
+   .volver-btn:hover {
+      background: var(--orange-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(255,133,51,0.4);
+    }
+
+    /* Filtros */
+    .filtros-box {
+      background: white;
+      padding: 1.5rem;
+      border-radius: var(--radius);
+      box-shadow: var(--ssemi-shadow);
+      margin-bottom: 2rem;
+    }
+
+    /* Resultados */
+    .card-resultado {
+      background: white;
+      padding: 1.5rem;
+      border-radius: var(--radius);
+      box-shadow: var(--ssemi-shadow);
+      margin-bottom: 2rem;
+    }
+
+    .tabla-resultados th {
+      background: var(--ssemi-orange);
+      color: white;
+      text-align: center;
+      padding: 0.7rem;
+    }
+
+    .tabla-resultados td {
+      background: #fff7f2;
+      text-align: center;
+      padding: 0.7rem;
+    }
+
+    /* Botones exportar */
+    .btn-export {
+      padding: 0.7rem 1.4rem;
+      border: none;
+      border-radius: var(--radius);
+      font-weight: 600;
+      color: white;
+    }
+    footer {
+  background-color: #ff8533;
+  color: white;
+  padding: 15px 0;
+  text-align: center;
+  font-size: 0.9rem;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+/* Para evitar que el contenido se oculte detrás del footer */
+body {
+  padding-bottom: 70px; /* ajusta según la altura del footer */
+}
+
+    .excel { background: #1d6f42; }
+    .pdf { background: #c82333; }
+  </style>
+</head>
+
+<body>
+
+<header class="topbar">
+  <div class="logo">SSEMI</div>
+  <button class="volver-btn" onclick="history.back()">⬅ Volver</button>
+</header>
+
+<main class="container">
+
+  <h1 class="mb-4 fw-bold">📊 Resultados de Evaluación</h1>
+
+  <!-- 🔍 CAJA DE FILTROS -->
+  <div class="filtros-box">
+    <h5 class="mb-3 fw-bold">Filtrar Resultados</h5>
+
+    <div class="row g-3">
+
+      <div class="col-md-3">
+        <label class="form-label fw-semibold">Evaluador</label>
+        <input id="filtroEvaluador" class="form-control" placeholder="Nombre evaluador">
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label fw-semibold">Evidencia</label>
+        <input id="filtroEvidencia" class="form-control" placeholder="Tipo evidencia">
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label fw-semibold">Estado</label>
+        <select id="filtroEstado" class="form-select">
+          <option value="">Todos</option>
+          <option value="Aprobado">Aprobado</option>
+          <option value="Pendiente">Pendiente</option>
+          <option value="Reprobado">Reprobado</option>
+        </select>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label fw-semibold">Fecha</label>
+        <input id="filtroFecha" type="date" class="form-control">
+      </div>
+    </div>
+
+    <div class="mt-3 d-flex gap-3">
+      <button onclick="aplicarFiltros()" class="btn btn-primary" style="background: var(--ssemi-orange); border:none;">Aplicar filtros</button>
+      <button onclick="limpiarFiltros()" class="btn btn-secondary">Limpiar</button>
+    </div>
+  </div>
+
+  <!-- Botones exportar -->
+  <div class="d-flex gap-3 mb-4">
+    <button class="btn-export excel" onclick="exportExcel()">📗 Exportar Excel</button>
+    <button class="btn-export pdf" onclick="exportPDF()">📕 Exportar PDF</button>
+  </div>
+
+  <!-- Contenedor resultados -->
+  <div id="contenedorResultados"></div>
+<footer>
+    © 2025 Sistema SSEMI | Todos los derechos reservados
+  </footer>
+</main>
+
+<script>
+  let resultadosGlobal = [];
+  const token = localStorage.getItem("ssemi_token");
+
+  if (!token) {
+    alert("Debes iniciar sesión");
+    location.href = "/login";
+  }
+
+  // ====== CARGAR DATOS ======
+  fetch("http://127.0.0.1:8000/instructor/calificaciones", {
+    headers: { "Authorization": `Bearer ${token}` }
+  })
+  .then(r => r.json())
+  .then(data => {
+    resultadosGlobal = data;
+    mostrarResultados(data);
+  });
+
+
+  // ====== MOSTRAR RESULTADOS ======
+  function mostrarResultados(lista) {
+    const cont = document.getElementById("contenedorResultados");
+    cont.innerHTML = "";
+
+    if (lista.length === 0) {
+      cont.innerHTML = `
+        <div class="alert alert-warning text-center">
+          No hay resultados para mostrar.
+        </div>`;
+      return;
+    }
+
+    lista.forEach(r => {
+      cont.innerHTML += `
+        <div class="card-resultado">
+          <table class="tabla-resultados table">
+            <tr>
+              <th>Evaluador</th>
+              <th>Evidencia</th>
+              <th>Puntaje</th>
+              <th>Observaciones</th>
+              <th>Fecha</th>
+              <th>Estado</th>
+            </tr>
+            <tr>
+              <td>${r.evaluador}</td>
+              <td>${r.evidencia}</td>
+              <td>${r.puntaje}</td>
+              <td>${r.observaciones}</td>
+              <td>${r.fecha}</td>
+              <td>${r.estado}</td>
+            </tr>
+          </table>
+        </div>`;
+    });
+  }
+
+  // ====== FILTROS ======
+  function aplicarFiltros() {
+    let ev = document.getElementById("filtroEvaluador").value.toLowerCase();
+    let evid = document.getElementById("filtroEvidencia").value.toLowerCase();
+    let est = document.getElementById("filtroEstado").value;
+    let fecha = document.getElementById("filtroFecha").value;
+
+    let filtrado = resultadosGlobal.filter(r => 
+      r.evaluador.toLowerCase().includes(ev) &&
+      r.evidencia.toLowerCase().includes(evid) &&
+      (est === "" || r.estado === est) &&
+      (fecha === "" || r.fecha === fecha)
+    );
+
+    mostrarResultados(filtrado);
+  }
+
+  function limpiarFiltros() {
+    document.getElementById("filtroEvaluador").value = "";
+    document.getElementById("filtroEvidencia").value = "";
+    document.getElementById("filtroEstado").value = "";
+    document.getElementById("filtroFecha").value = "";
+    mostrarResultados(resultadosGlobal);
+  }
+
+
+  // ====== EXPORTAR A EXCEL ======
+  function exportExcel() {
+    const cont = document.getElementById("contenedorResultados");
+    const wb = XLSX.utils.book_new();
+    const tablas = cont.querySelectorAll("table");
+
+    tablas.forEach((table, i) => {
+      const ws = XLSX.utils.table_to_sheet(table);
+      XLSX.utils.book_append_sheet(wb, ws, "Resultado " + (i + 1));
+    });
+
+    XLSX.writeFile(wb, "Resultados_SSEMI.xlsx");
+  }
+
+  // ====== EXPORTAR A PDF ======
+  async function exportPDF() {
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF("p", "mm", "a4");
+    const cont = document.getElementById("contenedorResultados");
+
+    await html2canvas(cont).then(canvas => {
+      const img = canvas.toDataURL("image/png");
+      const width = 190;
+      const height = (canvas.height * width) / canvas.width;
+      pdf.addImage(img, "PNG", 10, 10, width, height);
+    });
+
+    pdf.save("Resultados_SSEMI.pdf");
+  }
+</script>
+
+</body>
+</html>

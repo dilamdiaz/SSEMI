@@ -1,0 +1,595 @@
+/* styles.css - diseño inspirado en las imágenes proporcionadas */
+
+:root{
+  --orange: #ff7a00;
+  --dark: #333;
+  --light: #fff;
+  --card-bg: #fff;
+  --border: #f36b00;
+  --muted: #666;
+  --shadow: 0 6px 18px rgba(0,0,0,0.08);
+  --radius: 12px;
+  font-family: 'Poppins', Arial, sans-serif;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;color:var(--dark)}
+
+.topbar{
+  background:var(--orange);
+  color:var(--light);
+  padding:14px 28px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border-bottom:4px solid rgba(0,0,0,0.03);
+  position:sticky; top:0;
+}
+.logo{font-weight:700}
+.top-right{opacity:0.9;font-style:italic}
+
+/* Page layout */
+.page{display:flex;align-items:flex-start;justify-content:center;padding:60px 16px 120px 16px;min-height:calc(100vh - 140px)}
+.card{
+  width:640px;
+  max-width:92%;
+  background:var(--card-bg);
+  border-radius:16px;
+  box-shadow:var(--shadow);
+  padding:28px 34px;
+  text-align:center;
+}
+.card.wide{width:720px}
+.card-title{font-size:24px;margin:0 0 18px;color:var(--dark);font-weight:700}
+
+/* inner orange bordered container */
+.form-card{
+  border:3px solid var(--border);
+  border-radius:10px;
+  padding:22px;
+  text-align:left;
+  background:linear-gradient(0deg, rgba(255,255,255,0.98), rgba(255,255,255,0.98));
+}
+.two-col{display:flex;gap:18px;margin-bottom:18px}
+.two-col input, .two-col select{flex:1;padding:14px;border-radius:8px;border:1px solid #e6e6e6}
+.input-row{margin-bottom:18px}
+.full{margin-bottom:18px}
+.full input, .full select{width:100%;padding:14px;border-radius:8px;border:1px solid #e6e6e6}
+
+input::placeholder, select option{color: #999}
+
+/* Buttons */
+.buttons-row{display:flex;justify-content:space-between;gap:12px;margin-top:8px}
+.btn{padding:10px 22px;border-radius:8px;border:none;cursor:pointer;font-weight:600}
+.btn.primary{background:var(--orange);color:white;box-shadow:0 6px 0 rgba(0,0,0,0.06)}
+.btn.outline{background:#fff;color:var(--orange);border:2px solid var(--orange)}
+
+/* Small elements */
+.small-link{text-align:center;margin-top:12px}
+.small-link a{color:var(--orange);text-decoration:underline}
+.message{margin-top:12px;color:#b10000;font-weight:600}
+
+/* Footer */
+.footer{position:fixed;left:0;right:0;bottom:0;background:var(--orange);color:#fff;padding:10px 16px;text-align:center;font-size:14px}
+
+/* Responsive */
+@media (max-width:600px){
+  .two-col{flex-direction:column}
+  .card{padding:18px}
+  .card.wide{width:92%}
+}
+/* Reutilizamos lo que ya tienes y agregamos lo nuevo */
+.resultados {
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 30px;
+  background: #fdfdfd;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.resultados h1 {
+  margin-bottom: 25px;
+  font-size: 1.8rem;
+  color: #333;
+}
+
+.tabla-resultados {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.tabla-resultados th,
+.tabla-resultados td {
+  border: 1px solid #ccc;
+  padding: 12px;
+  font-size: 1rem;
+}
+
+.extra {
+  margin-bottom: 25px;
+  font-size: 1.1rem;
+  text-align: left;
+}
+
+.acciones {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.descargar {
+  background: #4CAF50;
+  color: white;
+  padding: 15px 30px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.cancelar {
+  background: #f44336;
+  color: white;
+  padding: 15px 30px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.contenedor-resultados {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.card-resultado {
+  background: #fff;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.mensaje-vacio {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #666;
+}
+.contenedor-resultados {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.card-resultado {
+  background: #fff;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.mensaje-vacio {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #444;
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.volver {
+  margin-top: 15px;
+  padding: 12px 25px;
+  background: #ff6600;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.mensajes-lista {
+  margin: 20px 0;
+}
+
+.mensaje-card {
+  background: #fff;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+  margin-bottom: 15px;
+}
+
+.form-redactar {
+  background: #f9f9f9;
+  padding: 20px;
+  border-radius: 12px;
+  margin: 20px 0;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+}
+
+.form-redactar textarea {
+  width: 100%;
+  margin: 10px 0;
+}
+
+.btn-cancelar {
+  background: #bbb;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-secundario {
+  background: #666;
+  color: #fff;
+  text-decoration: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  margin-top: 20px;
+  display: inline-block;
+}
+
+
+
+
+/* === Mejoras solo para el formulario de login === */
+#loginForm {
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+#loginForm .input-row input {
+  width: 100%;
+  font-size: 16px;
+  padding: 16px 14px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  transition: border-color 0.2s;
+}
+
+#loginForm .input-row input:focus {
+  outline: none;
+  border-color: var(--orange);
+  box-shadow: 0 0 0 3px rgba(255, 122, 0, 0.15);
+}
+
+#loginForm .input-row {
+  margin-bottom: 22px;
+}
+
+#loginForm .buttons-row {
+  justify-content: center;
+  gap: 14px;
+  margin-top: 10px;
+}
+
+#loginForm .btn {
+  padding: 5px 22px;
+  font-size: 16px;
+  border-radius: 10px;
+}
+
+#loginForm .btn.primary {
+  background: var(--orange);
+  color: #fff;
+  font-weight: 600;
+  width: 140px;
+}
+
+#loginForm .btn.outline {
+  border: 2px solid var(--orange);
+  color: var(--orange);
+  background: #fff;
+  width: 140px;
+}
+
+#loginForm .small-link a {
+  display: inline-block;
+  margin-top: 16px;
+  font-size: 15px;
+  color: var(--orange);
+}
+
+/* === LANDING PAGE === */
+body.landing {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background: #ffffff; /* Fondo blanco */
+  color: #333333; /* Texto gris oscuro */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.topbar {
+  background: #ff9800; /* Naranja */
+  color: white;
+  padding: 15px 20px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.landing-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 40px;
+}
+
+.intro h1 {
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+  color: #ff9800; /* Naranja */
+}
+
+.intro p {
+  max-width: 600px;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #555555; /* Gris medio */
+}
+
+.actions {
+  margin-top: 30px;
+}
+
+.btn {
+  display: inline-block;
+  padding: 15px 25px;
+  border-radius: 8px;
+  margin: 0 auto;
+  font-size: 1rem;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background 0.3s, color 0.3s;
+  
+}
+
+/* Botón naranja */
+.btn-primary {
+  background: #ff9800;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #e68900;
+}
+
+/* Botón gris */
+.btn-secondary {
+  background: #f0f0f0;
+  color: #333333;
+  border: 2px solid #cccccc;
+}
+
+.btn-secondary:hover {
+  background: #dddddd;
+}
+
+.footer {
+  background:  #ff9800; /* Gris claro */
+  padding: 15px;
+  text-align: center;
+  color: #ffffff;
+  font-size: 0.9rem;
+}
+
+/* === LOGIN AJUSTADO (Versión final con menor espacio superior) === */
+.page {
+  display: flex;
+  justify-content: flex-start; /* sube todo un poco más */
+  align-items: center;
+  flex-direction: column;
+  min-height: 100vh;
+  background: radial-gradient(circle at center, #ffffff 50%, #ff9800 100%);
+  background: linear-gradient(135deg, #ff9800 0%, #ffffff 50%, #ffffff 5%, #ff9800 100%);
+  background-blend-mode: overlay;
+  padding-top: 30px; /* controla la separación desde la barra naranja */
+}
+
+/* Contenedor del logo y la card */
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 30px; /* menos separación que antes */
+}
+
+
+
+.login-logo {
+      width: 300px;           /* Aumenta el tamaño del logo */
+      height: auto;           /* Mantiene las proporciones */
+      border-radius: 0%;    /* Bordes ligeramente redondeados (puedes usar 0 si lo quieres cuadrado) */
+      padding: 20px;          /* Espacio interno */
+      box-shadow: none;
+      margin-top: -100px;
+}
+
+/* Card del login centrada y más ancha */
+.card {
+  position: relative;
+  background: #fff;
+  padding: 2.5rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  width: 640px;
+  max-width: 92%;
+  text-align: center;
+  margin-top: -70px;
+}
+
+/* Ajustes responsive */
+@media (max-width: 600px) {
+  .login-logo {
+    width: 90px;
+  }
+
+  .card {
+    width: 90%;
+    padding: 1.8rem;
+  }
+}
+/* === LANDING PAGE CON DEGRADADO Y LOGO === */
+body.landing {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background-blend-mode: overlay;
+  color: #333333;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: radial-gradient(circle at center, #ffffff 50%, #ff9800 100%);
+  background: linear-gradient(135deg, #ff9800 0%, #ffffff 50%, #ffffff 5%, #ff9800 100%);
+}
+
+.landing-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 60px 20px;
+}
+
+
+
+.landing-logo {
+  width: 130px;
+  height: auto;
+  border-radius: 50%;
+  padding: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  background: transparent !important;
+}
+
+/* Ajustes responsive */
+@media (max-width: 600px) {
+  .landing-logo {
+    width: 100px;
+  }
+
+  .intro h1 {
+    font-size: 2rem;
+  }
+
+  .intro p {
+    font-size: 1rem;
+  }
+}
+/* === EFECTOS HOVER PARA BOTONES DE LANDING === */
+.btn-primary {
+  background: #ff9800;
+  color: #fff;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background: #e67e00; /* tono más oscuro al pasar */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 152, 0, 0.4);
+}
+
+.btn-secondary {
+  background: #ffffff;
+  color: #ff9800;
+  border: 2px solid #ff9800;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background: #ff9800;
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 152, 0, 0.4);
+}
+/* === EFECTOS DE BOTONES: LOGIN === */
+
+/* Botón "Entrar" */
+.btn.primary {
+  background-color: #ff9800 !important;
+  color: #ffffff !important;
+  border: none !important;
+  transition: all 0.3s ease !important;
+}
+
+.btn.primary:hover {
+  background-color: #e67e00 !important; /* tono más oscuro */
+  color: #ffffff !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 152, 0, 0.5);
+}
+
+/* Botón "Crear cuenta" */
+.btn.outline {
+  background-color: #ffffff !important;
+  color: #ff9800 !important;
+  border: 2px solid #ff9800 !important;
+  transition: all 0.3s ease !important;
+}
+
+.btn.outline:hover {
+  background-color: #ff9800 !important;
+  color: #ffffff !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 152, 0, 0.5);
+}
+
+/* Animación al presionar */
+.btn.primary:active,
+.btn.outline:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* evita scroll innecesario */
+  overflow-y: auto;  
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* centra verticalmente */
+  align-items: center;     /* centra horizontalmente */
+  height: 100vh;           /* ocupa toda la altura visible */
+  box-sizing: border-box;
+  overflow-y: auto;        /* si el formulario es MUY largo, permite scroll */
+  padding: 20px;
+}
+
+.logo-wrapper {
+  margin-top: -80px;
+  margin-bottom: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+}
+
+.card.wide {
+  margin-top: -30px;
+}
+
+.logo-wrapper img {
+  width: 300px;           /* Aumenta el tamaño del logo */
+  height: auto;           /* Mantiene las proporciones */
+  border-radius: 15%;    /* Bordes ligeramente redondeados (puedes usar 0 si lo quieres cuadrado) */
+  padding: 10px;          /* Espacio interno */
+  box-shadow: none;
+  background: transparent;
+}

@@ -1,0 +1,1780 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link 
+  href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" 
+  rel="stylesheet" 
+  integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" 
+  crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+
+  <title>Solicitud de Evaluación - SSEMI</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f9;
+      margin: 0;
+    }
+    header {
+      background: #ff6600;
+      color: #fff;
+      padding: 15px 30px;
+      font-size: 18px;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Botón volver */
+    .volver-btn {
+      background: #fff;
+      color: #ff6600;
+      border: 2px solid #fff;
+      border-radius: 8px;
+      padding: 8px 14px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: bold;
+      transition: 0.2s;
+    }
+    .volver-btn:hover {
+      background: #ff8533;
+      color: #fff;
+      border-color: #ff8533;
+      transform: scale(1.05);
+    }
+
+    .topbar {
+      background-color: #ff8533;
+      color: #fff;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      font-weight: 600;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+    
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    h2 {
+      color: #ff6600;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+        /* Etiqueta general para títulos de preguntas */
+    label.form-label { /* Hacemos este selector más específico */
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    /* Aseguramos que las etiquetas dentro de form-check se alineen correctamente */
+    .form-check-label {
+        display: inline; /* Vuelven a comportarse en línea con el radio button */
+        margin-top: 0; /* Eliminamos el margen superior extra aquí */
+    }
+
+    /* Ajuste para los inputs de radio/checkbox si es necesario, aunque Bootstrap lo suele manejar */
+    .form-check input[type="radio"] {
+        width: auto; /* Asegura que el input de radio no tome el 100% del ancho */
+        margin-right: 10px; /* Añade un pequeño espacio a la derecha del botón */
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    input[type="file"] {
+      border: none;
+    }
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 16px;
+      background: #ff6600;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 18px;
+    }
+    button:hover {
+      background: #ff8533;
+    }
+    .alert {
+      margin-top: 20px;
+      padding: 10px;
+      border-radius: 8px;
+      text-align: center;
+      display: none;
+    }
+    .success {
+      background: #d4edda;
+      color: #155724;
+    }
+    .error {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    form {
+  background-color: #f8fafc;
+}
+
+form .form-select {
+  color: #000000ff;
+  margin-top:4%;
+}
+
+form .position-relative {
+  margin-top:4%;
+}
+
+.custom-orange {
+    background-color: #ff6600 !important;
+  }
+  .custom-orange-btn {
+    background-color: #ff6600;
+    border: none;
+  }
+  .custom-orange-btn:hover {
+    background-color: #ff8533;
+  }
+
+  form .red_conocimiento {
+    margin-top:6%;
+  }
+
+  form .redsita {
+    margin-top:6%;
+  }
+
+  .form-step {
+    transition: all 0.4s ease;
+  }
+
+  /* ========================================
+   FOOTER
+======================================== */
+footer {
+  background-color: #ff8533;
+  color: white;
+  padding: 15px 0;
+  text-align: center;
+  font-size: 0.9rem;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+/* Para evitar que el contenido se oculte detrás del footer */
+body {
+  padding-bottom: 70px; /* ajusta según la altura del footer */
+}
+
+.modal-content {
+    border-radius: 20px !important;
+    padding: 25px;
+    border: none;
+}
+
+.modal-header-custom {
+    background: #ff7a00;
+    color: white;
+    border-radius: 15px 15px 0 0;
+    padding: 20px;
+    text-align: center;
+}
+.modal-icon {
+    font-size: 55px;
+    color: #ff7a00;
+}
+
+.modal-success-icon {
+    font-size: 70px;
+    color: #28a745;
+}
+
+.fade {
+    transition: opacity .25s linear;
+}
+
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <span>📂 Solicitud De Evaluación</span>
+    <div class="text-start mb-3">
+  <button class="volver-btn" onclick="history.back()">⬅ Volver</button>
+
+</div>
+  </header>
+  
+<form id="formEvidencias" enctype="multipart/form-data">
+  <!-- PASO 1 -->
+   <div class="container">
+    <div id="paso1" class="form-step active">
+    <h2>Información Personal</h2>
+
+    <select class="form-select mb-3" name="Regional">
+      <option selected>Regional a la que pertenece</option>
+      <option value="1">Regional Distrito Capital</option>
+    </select>
+
+    
+<select class="form-select" aria-label="Default select example" name="Centro_formacion">
+  <option selected>Centro de Formación al que pertenece</option>
+  <option value="Centro de Diseño y Metrología">Centro de Diseño y Metrología</option>
+  <option value="Centro de Electricidad, Electrónica y Telecomunicaciones">Centro de Electricidad, Electrónica y Telecomunicaciones </option>
+  <option value="Centro de Formación de Talento Humano en Salud">Centro de Formación de Talento Humano en Salud </option>
+  <option value="Centro de Gestión Administrativa">Centro de Gestión Administrativa </option>
+  <option value="Centro de Gestión de Mercados, Logística, y TIC'S">Centro de Gestión de Mercados, Logística, y TIC'S </option>
+  <option value="Centro de Gestión Insdustrial">Centro de Gestión Insdustrial </option>
+  <option value="Centro de Formación en Actividad Física y Cultura">Centro de Formación en Actividad Física y Cultura </option>
+  <option value="Centro de Manufacturas en Textiles y Cuero">Centro de Manufacturas en Textiles y Cuero </option>
+  <option value="Centro de Materiales y Ensayos">Centro de Materiales y Ensayos </option>
+  <option value="Centro de Servicios Financieros">Centro de Servicios Financieros </option>
+  <option value="Centro de Tecnologías de Transporte">Centro de Tecnologías de Transporte </option>
+  <option value="Centro de Tecnologías para la Construcción y la Madera">Centro de Tecnologías para la Construcción y la Madera </option>
+  <option value="Centro Metalmecánico">Centro Metalmecánico </option>
+  <option value="Centro Nacional de Hotelería, Turismo y Alimentos">Centro Nacional de Hotelería, Turismo y Alimentos </option>
+  <option value="Centro para la Industria de la Comunicación Gráfica">Centro para la Industria de la Comunicación Gráfica </option>
+</select>
+
+
+    <div class="mb-3 position-relative">
+      <label for="fecha" class="form-label">Fecha de Posesión en el Cargo</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-calendar-event"></i></span>
+        <input type="date" class="form-control" id="fecha" name="Fecha_posesion_cargo">
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="numVigencias" class="form-label fw-bold">
+        Cantidad de vigencias que desea sean evaluadas
+      </label>
+      <select class="form-select shadow-sm" id="numVigencias" name="vigencias" onchange="mostrarModalVigencias()">
+        <option value="">Seleccione...</option>
+        <script>
+          for(let i=1; i<=20; i++){
+            document.write(`<option value="${i}">Año ${i}</option>`);
+          }
+        </script>
+      </select>
+    </div>
+
+    <div id="contenedorVigencias"></div>
+
+    
+  <div class="modal fade" id="modalVigencias" tabindex="-1" aria-labelledby="modalVigenciasLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg">
+      <div class="modal-header custom-orange text-white">
+        <h5 class="modal-title" id="modalVigenciasLabel">📅 Información de Vigencias</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <p>
+          <strong>DESDE:</strong> 1 de enero del año de inicio de la evaluación <br>
+          <strong>HASTA:</strong> 31 de diciembre del año inmediatamente anterior.
+        </p>
+        <p class="text-muted mb-0">
+          Al continuar, se generarán los campos para seleccionar las vigencias específicas.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn custom-orange text-white" onclick="generarCamposVigencias()" data-bs-dismiss="modal">
+          Aceptar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    <div class="red_conocimiento">
+      <label for="Red" class="form-label">Digite su Red de Conocimiento (ej: RED DE CONOCIMIENTO: CULTURA)</label>
+      <input class="form-control" type="text" placeholder="En mayúsculas, sin tildes, ni signos de puntuación " aria-label="default input example" name="Red_conocimiento">
+      </div>
+
+     <div class="red_conocimiento">
+      <label for="Red" class="form-label">Digite el área temática en la que imparte formación (ej: AGRICULTURA DE PRECISIÓN)</label>
+      <input class="form-control" type="text" placeholder="En mayúsculas, sin tildes, ni signos de puntuación " aria-label="default input example" name="Area_tematica">
+      </div>
+
+
+    <!-- Campo de coordinación -->
+    <div class="mt-4">
+      <label for="coordino" class="form-label fw-bold">
+        ¿En el periodo a evaluar ejerció funciones de coordinación?
+      </label>
+      <select class="form-select shadow-sm" id="coordino" onchange="mostrarFechasCoordinacion()" name="Funciones_coordinacion">
+        <option value="">Seleccione...</option>
+        <option value="si">Sí</option>
+        <option value="no">No</option>
+      </select>
+    </div>
+
+    <div id="fechasCoordinacion" class="card p-3 mt-3 shadow-sm border-0" style="display: none;">
+      <h6 class="fw-bold mb-3 text-secondary">📅 Período de coordinación</h6>
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label class="form-label">Desde</label>
+          <input type="date" class="form-control" name="Fecha_desde_coordinacion">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Hasta</label>
+          <input type="date" class="form-control" name="Fecha_hasta_coordinacion">
+        </div>
+      </div>
+    </div>
+
+    <!-- Botón siguiente -->
+    <div class="text-end mt-4">
+      <button type="button" class="btn btn-next custom-orange-btn text-white px-4 py-2 rounded-pill">
+        Siguiente →
+      </button>
+    </div>
+  </div>
+
+  <!-- PASO 2 -->
+  <div id="paso2" class="form-step" style="display: none;">
+    <h2>Factor Experiencia</h2>
+
+    <div class="mb-4">
+              <label class="form-label fw-bold">1. ¿En el periodo a evaluar tuvo licencias no remuneradas?</label>
+              <div class="form-check">
+                <input type="radio" name="licencia" id="licenciaSi" value="si" >
+                <label class="form-check-label" for="licenciaSi">Sí</label>
+              </div>
+              <div class="form-check">
+                <input type="radio" name="licencia" id="licenciaNo" value="no">
+                <label class="form-check-label" for="licenciaNo">No</label>
+              </div>
+            </div>
+
+            <!-- Pregunta 2 -->
+            <div class="mb-4 d-none" id="pregunta2">
+              <label class="form-label fw-bold" name="licencianoremunerada">2. ¿Cuántos días duró la licencia no remunerada?</label>
+              <select class="form-select" id="diasLicencia" name="Dias_de_licencia">
+                <option value="" selected disabled>Seleccione una opción</option>
+                <option>5 a 10 días</option>
+                <option>10 a 15 días</option>
+                <option>15 a 30 días</option>
+                <option>30 a 60 días</option>
+                <option>60 a 90 días</option>
+                <option>90 a 180 días</option>
+                <option>360 días o más</option>
+              </select>
+            </div>
+
+            <!-- Pregunta 3 -->
+            <div class="mb-4 d-none" id="pregunta3">
+              <label class="form-label fw-bold">3. Especifique la fecha de la licencia</label>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label">Desde</label>
+                  <input type="date" class="form-control" id="fechaDesde" name="Fecha_inicio_licencia">
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Hasta</label>
+                  <input type="date" class="form-control" id="fechaHasta" name="Fecha_final_licencia">
+                </div>
+              </div>
+            </div>
+
+
+    <div class="text-end mt-4">
+      <button type="button" class="btn custom-orange-btn text-white px-4 py-2 rounded-pill me-2 btn-prev">
+        ⬅ Atrás
+      </button>
+      <div class="text-end mt-4">
+      <button type="button" class="btn btn-next2 custom-orange-btn text-white px-4 py-2 rounded-pill">
+        Siguiente →
+      </button>
+    </div>
+      
+    </div>
+  </div>
+
+    <div id="paso3" class="form-step" style="display: none;">
+        <h2>Factor de Evaluación del Desempeño Laboral (EDL)</h2>
+<div class="mb-4">
+          <label class="form-label fw-bold">1. Escoja tipo de cargo</label>
+            <select id="tipoCargo" class="form-select shadow-sm" onchange="mostrarPeriodosEDL()" name="Tipo_cargo">
+              <option value="">Seleccione...</option>
+              <option value="carrera">Carrera administrativa</option>
+              <option value="provisional">Planta provisional</option>
+            </select>
+        </div>
+
+      <!-- Contenedor dinámico de periodos -->
+      <div id="contenedorPeriodos" class="mt-4"></div>
+
+      <!-- Modal de advertencia -->
+        <div class="modal fade" id="modalAdvertencia" tabindex="-1" aria-labelledby="modalAdvertenciaLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg">
+              <div class="modal-header custom-orange text-white">
+                <h5 class="modal-title" id="modalAdvertenciaLabel">⚠️ Atención</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                
+              </div>
+                       <div class="modal-body">
+          <p>
+            Si usted hace parte de la <strong>planta provisional</strong>, deberá cargar soporte en PDF de la evaluación.<br><br>
+            <em>De no ser así, este factor no será ponderado en su proceso de EDL.</em>
+          </p>
+        </div>
+        <div class="modal-footer">
+              <button class="btn custom-orange-btn text-white" data-bs-dismiss="modal">Entendido</button>
+            </div>
+            </div>
+          </div>
+          
+        </div>
+         <div class="text-end mt-4">
+          <button class="btn custom-orange-btn text-white px-4 py-2 rounded-pill me-2 btn-prev2">← Atrás</button>
+          <button type="button" class="btn custom-orange-btn text-white px-4 py-2 rounded-pill btn-next3">Siguiente →</button>
+        </div>
+      </div>
+    
+
+  <!-- Paso 4 -->
+
+  <div id="paso4" class="form-step" style="display: none;">
+  <h2 class="mb-4">Factor de Producción Tecnico-Pedagogica</h2>
+ <div class="mb-3">
+    <label class="form-label fw-bold">1. ¿En la vigencia a evaluar presentó producto técnico-pedagógico?</label>
+    <select class="form-select shadow-sm" id="presentoProducto" onchange="mostrarOpcionesProducto()" name="Producto_pedagogico">
+      <option value="">Seleccione...</option>
+      <option value="si">Sí</option>
+      <option value="no">No</option>
+    </select>
+  </div>
+
+  
+  <!-- Pregunta 2 -->
+  <div class="mb-3" id="contenedorCantidad" style="display: none;">
+    <label class="form-label fw-bold">2. Cantidad de productos técnico-pedagógicos presentados:</label>
+    <select class="form-select shadow-sm" id="Cantidad_de_Productos" onchange="generarCamposProductos()" name="Cantidad_productos">
+      <option value="">Seleccione...</option>
+      <script>
+        for (let i = 1; i <= 10; i++) {
+          document.write(`<option value="${i}">${i}</option>`);
+        }
+      </script>
+    </select>
+  </div>
+
+<!-- Pregunta 3: se muestra solo si generó productos -->
+ <div id="camposProductos" class="mt-3"></div>
+ <div id="preguntaCalificacion" class="mt-4" style="display: none;">
+  <label class="form-label fw-bold">
+    3. Solo se puede valorar un producto técnico-pedagógico por año (máximo 6 puntos).  
+    Ingrese la calificación del producto con mayor puntaje:
+  </label>
+  <input type="number" id="puntajeProductoInput" name="Puntaje_maximo"  class="form-control w-50" step="0.01" max="6" placeholder="Ej: 5.8" onchange="actualizarPuntajeProducto()">
+</div>
+
+ <!-- Contenedor dinámico -->
+  <div id="camposProductos" class="mt-3"></div>
+  <div class="text-end mt-4">
+    <button class="btn custom-orange-btn text-white px-4 py-2 rounded-pill me-2 btn-prev3">← Atrás</button>
+    <button type="button" class="btn custom-orange-btn text-white px-4 py-2 rounded-pill btn-next4">Siguiente →</button>
+  </div>
+</div>
+ 
+<div id="paso5" class="form-step" style="display: none;">
+  <h2 class="mb-4">Factor de Educación</h2>
+
+  <!-- 1. Profesión -->
+  <div class="mb-4">
+    <label class="form-label fw-bold">
+      1. ¿Cuál es su profesión? (Incluya postgrado)
+    </label>
+    <div id="contenedorProfesiones">
+      <input type="text" class="form-control mb-2" placeholder="Escríbala en MAYÚSCULA, sin tildes o signos de puntuación." name="Profesion">
+    </div>
+    <button type="button" class="btn custom-orange-btn text-white btn-sm" onclick="agregarProfesion()">+ Agregar otra profesión</button>
+  </div>
+
+  <hr>
+
+  <!-- 2. Tipo de estudio -->
+  <div class="mb-4">
+    <label class="form-label fw-bold">2. Seleccione tipo de estudio:</label>
+    <select class="form-select shadow-sm" id="Tipo_Estudio" onchange="mostrarCamposEstudio(); actualizarPuntajeEstudio();" name="tipo_estudio">
+      <option value="">Seleccione...</option>
+      <option value="tecnica">Formación técnica profesional </option>
+      <option value="tecnologica">Formación tecnológica </option>
+      <option value="universitaria">Formación universitaria </option>
+      <option value="especializacion_tecnologica">Especialización tecnológica </option>
+      <option value="especializacion_universitaria">Especialización universitaria </option>
+      <option value="maestria">Maestría </option>
+      <option value="doctorado">Doctorado </option>
+      <option value="semestres">Semestres cursados y aprobados</option>
+    </select>
+  </div>
+
+  <!-- Contenedor dinámico -->
+  <div id="contenedorCamposEstudio"></div>
+  
+<div class="text-end mt-4">
+          <button class="btn custom-orange-btn text-white px-4 py-2 rounded-pill me-2 btn-prev4">← Atrás</button>
+          <button type="button" class="btn custom-orange-btn text-white px-4 py-2 rounded-pill btn-next5">Siguiente →</button>
+        </div>
+
+  </div>
+
+
+
+<div id="paso6" class="form-step" style="display: none;">
+  <h2 class="mb-4">Factor de Capacitación</h2>
+  
+  <!-- 1. Establecimiento -->
+  <div class="mb-4">
+    <label class="form-label fw-bold">
+      1. Digite el establecimiento donde realizó la capacitación
+    
+    </label>
+    <input type="text" class="form-control shadow-sm" placeholder="Escríbalo en MAYÚSCULA y sin tildes o signos de puntuación." id="cap_establecimiento" name="Establecimiento_capacitacion">
+  </div>
+
+  <!-- 2. Fecha -->    
+    <div class="row mb-4"> 
+      <label class="form-label fw-bold">2. Fecha de realización de la capacitación</label>
+        <div class="col-md-4">
+          <label class="form-label">Desde</label>
+          <input type="date" class="form-control" name="Fecha_inicio_capacitacion" required>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Hasta</label>
+          <input type="date" class="form-control" name="Fecha_final_capacitacion" required>
+        </div>
+      </div>
+
+  <!-- 3. Nombre del curso -->
+  <div class="mb-4">
+    <label class="form-label fw-bold">
+      3. Digite el nombre del curso
+    </label>
+    <input type="text" class="form-control shadow-sm" placeholder="En MAYÚSCULA y sin tildes."  id="cap_curso" name="Nombre_curso">
+  </div>
+
+  <!-- 4. Horas -->
+  <div class="mb-4">
+    <label class="form-label fw-bold">4. ¿Cuántas horas tiene la capacitación?</label>
+    <select class="form-select shadow-sm" id="cap_horas_opcion" onchange="validarHorasCapacitacion()" name="Cantidad_horas_capacitacion">
+      <option value="">Seleccione...</option>
+      <option value="mas">Más de 15 horas</option>
+      <option value="menos">Menos de 15 horas</option>
+    </select>
+
+    <div id="cap_input_horas" class="mt-3" style="display:none;">
+      <label class="form-label">Digite el número de horas:</label>
+      <input type="number" class="form-control" id="cap_horas_valor" min="16" name="Numero_horas_capacitacion">
+    </div>
+  </div>
+
+  <!-- 5. Asistencial -->
+  <div class="mb-4">
+    <label class="form-label fw-bold">5. ¿La capacitación es únicamente asistencial?</label>
+    <select class="form-select shadow-sm" id="cap_asistencial" onchange="validarAsistencial()" name="Capacitacion_asistencial">
+      <option value="">Seleccione...</option>
+      <option value="si">Sí</option>
+      <option value="no">No</option>
+    </select>
+
+    <div id="cap_asistencial_horas" style="display:none;" class="mt-3">
+      <label class="form-label">Digite número de horas:</label>
+      <input type="number" class="form-control" id="cap_asist_horas_valor" name="Valor_horas_capacitacion">
+    </div>
+  </div>
+
+  <!-- 6. Exterior -->
+  <div class="mb-4">
+    <label class="form-label fw-bold">
+      6. ¿El establecimiento donde realizó la capacitación es del exterior?
+    </label>
+    <select class="form-select shadow-sm" id="cap_exterior" name="Capacitacion_exterior">
+      <option value="">Seleccione...</option>
+      <option value="si">Sí</option>
+      <option value="no">No</option>
+    </select>
+  </div>
+
+  <!-- 7. Cantidad de horas total -->
+  <div class="mb-4">
+    <label class="form-label fw-bold">
+      7. Digite la cantidad total de horas certificadas
+    </label>
+    <input type="number" class="form-control shadow-sm" id="cap_total_horas" name="Horas_certificadas">
+  </div>
+
+  <!-- Subir archivos -->
+  <div class="mb-4">
+    <label class="form-label fw-bold">Cargar certificados en PDF:</label>
+    <input type="file" class="form-control" accept="application/pdf" multiple >
+  </div>
+
+  <div class="text-end mt-4">
+    <button class="btn custom-orange-btn text-white px-4 py-2 rounded-pill me-2 btn-prev5">← Atrás</button>
+    <button type="button" class="btn custom-orange-btn text-white px-4 py-2 rounded-pill btn-next6">Siguiente →</button>
+    </div>
+  </div>
+    
+<div id="pasofinal" class="form-step" style="display: none;">
+  <h2 class="mb-4">Final Envío</h2>
+
+  <div class="text-end mt-4">
+    <button class="btn custom-orange-btn text-white px-4 py-2 rounded-pill me-2 btn-prev6">
+      ← Atrás
+    </button>
+
+    <!-- ESTE abre el modal -->
+    <button 
+      type="button"
+      class="btn btn-success custom-orange-btn text-white px-4 py-2 rounded-pill"
+      onclick="mostrarResumenArchivos()"
+    >
+      Enviar formulario ✅
+    </button>
+  </div>
+</div>
+<!-- Campos requeridos por el backend -->
+<input type="text" name="titulo" hidden value="Evidencia SSEMI">
+<input type="text" name="descripcion" hidden value="Formulario SSEMI completo">
+<input type="number" name="id_categoria_fk" hidden value="5">
+<input type="number" name="id_usuario_fk" hidden value="13">
+<input type="number" name="reportes_id_reporte" hidden>
+
+</form>
+
+  <footer>
+    © 2025 Sistema SSEMI | Todos los derechos reservados
+  </footer>
+
+    <div id="alerta" class="alert"></div>
+  </div>
+
+<script>
+const API_BASE = "http://127.0.0.1:8000";
+
+let puntajeEducacion = 0;
+let puntajeProducto = 0;
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  const evidenciaForm = document.getElementById("evidenciaForm");
+  const alerta = document.getElementById("alerta");
+  const categoriaSelect = document.getElementById("categoria");
+
+  if (!evidenciaForm || !alerta || !categoriaSelect) return;
+
+  // Obtener token y user_id
+  const token = localStorage.getItem("ssemi_token");
+  const user_id = parseInt(localStorage.getItem("user_id")); // fuerza número
+
+  if (!token || !user_id) {
+    alerta.className = "alert error";
+    alerta.textContent = "⚠️ Debes iniciar sesión";
+    alerta.style.display = "block";
+    return;
+  }
+
+  evidenciaForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    alerta.style.display = "none";
+
+    const titulo = document.getElementById("titulo").value.trim();
+    const descripcion = document.getElementById("descripcion").value.trim();
+    const categoria = categoriaSelect.value;
+    const archivos = document.getElementById("archivos").files;
+
+    if (!titulo || !categoria || archivos.length === 0) {
+      alerta.className = "alert error";
+      alerta.textContent = "⚠️ Complete todos los campos y seleccione al menos un archivo.";
+      alerta.style.display = "block";
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("titulo", titulo);
+    formData.append("descripcion", descripcion);
+    formData.append("id_categoria_fk", categoria);
+    formData.append("id_usuario_fk", user_id);
+
+    for (let i = 0; i < archivos.length; i++) {
+      formData.append("files", archivos[i]);
+    }
+    // ===== NUEVO: Capturar todos los campos del formulario =====
+const formElement = document.getElementById("formEvidencias");
+const formFields = new FormData(formElement);
+
+let jsonFormulario = {};
+
+formFields.forEach((value, key) => {
+    if (jsonFormulario[key]) {
+        if (!Array.isArray(jsonFormulario[key])) {
+            jsonFormulario[key] = [jsonFormulario[key]];
+        }
+        jsonFormulario[key].push(value);
+    } else {
+        jsonFormulario[key] = value;
+    }
+});
+
+// Agregar JSON al FormData principal
+formData.append("formulario_json", JSON.stringify(jsonFormulario));
+
+
+    try {
+      const res = await fetch(`${API_BASE}/evidencias/multiple`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+        body: formData,
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ detail: "Error al subir evidencia" }));
+        alerta.className = "alert error";
+        alerta.textContent = err.detail || "❌ Error en la carga";
+        alerta.style.display = "block";
+        return;
+      }
+
+      alerta.className = "alert success";
+      alerta.textContent = "✅ Evidencias subidas correctamente.";
+      alerta.style.display = "block";
+      evidenciaForm.reset();
+    } catch (err) {
+      alerta.className = "alert error";
+      alerta.textContent = "❌ No se pudieron subir las evidencias.";
+      alerta.style.display = "block";
+      console.error(err);
+    }
+  });
+});
+let modalBootstrap;
+
+function mostrarModalVigencias() {
+  const num = parseInt(document.getElementById("numVigencias").value);
+  if (!num || num < 1) return;
+
+  // Mostrar modal de confirmación
+  const modal = document.getElementById('modalVigencias');
+  modalBootstrap = new bootstrap.Modal(modal);
+  modalBootstrap.show();
+}
+
+function generarCamposVigencias() {
+  const num = parseInt(document.getElementById("numVigencias").value);
+  const contenedor = document.getElementById("contenedorVigencias");
+  contenedor.innerHTML = ""; // Limpia los campos anteriores
+
+  if (isNaN(num) || num < 1) return;
+
+  for (let i = 1; i <= num; i++) {
+    const div = document.createElement("div");
+    div.classList.add("mb-3");
+
+    div.innerHTML = `
+      <label for="vigencia${i}" class="form-label">Vigencia ${i}:</label>
+      <select class="form-select shadow-sm" id="vigencia${i}" name="vigencia${i}">
+        <option value="">Seleccione año...</option>
+        ${generarOpcionesAnios()}
+      </select>
+    `;
+    contenedor.appendChild(div);
+  }
+}
+
+function generarOpcionesAnios() {
+  const yearActual = new Date().getFullYear();
+  let options = "";
+  for (let y = yearActual; y >= 2000; y--) {
+    options += `<option value="${y}">${y}</option>`;
+  }
+  return options;
+}
+
+function mostrarFechasCoordinacion() {
+  const select = document.getElementById("coordino");
+  const contenedor = document.getElementById("fechasCoordinacion");
+  contenedor.style.display = select.value === "si" ? "block" : "none";
+}
+
+ const pasos = [
+    document.getElementById("paso1"),
+    document.getElementById("paso2"),
+    document.getElementById("paso3"),
+    document.getElementById("paso4"),
+    document.getElementById("paso5"),
+    document.getElementById("paso6"),
+    document.getElementById("pasofinal")
+  ];
+
+ let pasoActual = 0; // empieza en el paso 1 (índice 0)
+
+  // Función para mostrar el paso actual y ocultar los demás
+  function mostrarPaso(index) {
+    pasos.forEach((p, i) => {
+      p.style.display = i === index ? "block" : "none";
+    });
+  }
+
+    mostrarPaso(pasoActual);
+
+ // Paso 1 → Paso 2
+  document.querySelector(".btn-next")?.addEventListener("click", () => {
+    pasoActual = 1;
+    mostrarPaso(pasoActual);
+  });
+
+  // Paso 2 → Paso 1
+  document.querySelector(".btn-prev")?.addEventListener("click", () => {
+    pasoActual = 0;
+    mostrarPaso(pasoActual);
+  });
+
+  // Paso 2 → Paso 3
+  document.querySelector(".btn-next2")?.addEventListener("click", () => {
+    pasoActual = 2;
+    mostrarPaso(pasoActual);
+  });
+
+  // Paso 3 → Paso 2
+  document.querySelector(".btn-prev2")?.addEventListener("click", () => {
+    pasoActual = 1;
+    mostrarPaso(pasoActual);
+  });
+
+  // Paso 3 → Paso 4
+  document.querySelector(".btn-next3")?.addEventListener("click", () => {
+    pasoActual = 3;
+    mostrarPaso(pasoActual);
+  });
+
+  // Paso 4 → Paso 3
+  document.querySelector(".btn-prev3")?.addEventListener("click", () => {
+    pasoActual = 2;
+    mostrarPaso(pasoActual);
+  });
+
+  // Paso 4 → Paso 5
+  document.querySelector(".btn-next4")?.addEventListener("click", () => {
+    pasoActual = 4;
+    mostrarPaso(pasoActual);
+  });
+
+  // Paso 5 → Paso 4
+  document.querySelector(".btn-prev4")?.addEventListener("click", () => {
+    pasoActual = 3;
+    mostrarPaso(pasoActual);
+  });
+
+  // Paso 5 → Paso 6
+  document.querySelector(".btn-next5")?.addEventListener("click", () => {
+    pasoActual = 5;
+    mostrarPaso(pasoActual);
+  });
+
+  // Paso 6 → Paso 5
+  document.querySelector(".btn-prev5")?.addEventListener("click", () => {
+    pasoActual = 4;
+    mostrarPaso(pasoActual);
+  });
+
+  // Paso 6 → Paso 7
+  document.querySelector(".btn-next6")?.addEventListener("click", () => {
+    pasoActual = 6;
+    mostrarPaso(pasoActual);
+  });
+
+  // Paso 7 → Paso 6
+  document.querySelector(".btn-prev6")?.addEventListener("click", () => {
+    pasoActual = 5;
+    mostrarPaso(pasoActual);
+  });
+
+
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const licenciaSi = document.getElementById("licenciaSi");
+      const licenciaNo = document.getElementById("licenciaNo");
+      const pregunta2 = document.getElementById("pregunta2");
+      const pregunta3 = document.getElementById("pregunta3");
+      const diasLicencia = document.getElementById("diasLicencia");
+      const fechaDesde = document.getElementById("fechaDesde");
+      const fechaHasta = document.getElementById("fechaHasta");
+      const btnSiguiente = document.getElementById("btnSiguiente");
+      const pasoLicencias = document.getElementById("pasoLicencias");
+      const pasoEDL = document.getElementById("pasoEDL");
+
+      // Mostrar u ocultar según respuesta
+      licenciaSi.addEventListener("change", () => {
+        pregunta2.classList.remove("d-none");
+        pregunta3.classList.remove("d-none");
+        btnSiguiente.disabled = true;
+      });
+
+      licenciaNo.addEventListener("change", () => {
+        pregunta2.classList.add("d-none");
+        pregunta3.classList.add("d-none");
+        btnSiguiente.disabled = false; // ✅ Ahora sí permite continuar
+      });
+
+      // Habilitar botón cuando todo esté lleno (si dijo sí)
+      [diasLicencia, fechaDesde, fechaHasta].forEach(el => {
+        el.addEventListener("input", () => {
+          if (
+            licenciaSi.checked &&
+            diasLicencia.value &&
+            fechaDesde.value &&
+            fechaHasta.value
+          ) {
+            btnSiguiente.disabled = false;
+          }
+        });
+      });
+
+      // Botón siguiente
+      btnSiguiente.addEventListener("click", () => {
+        pasoLicencias.classList.remove("active");
+        pasoLicencias.classList.add("d-none");
+        pasoEDL.classList.add("active");
+      });
+    });
+
+    let modalAdvertencia;
+document.addEventListener("DOMContentLoaded", () => {
+  modalAdvertencia = new bootstrap.Modal(document.getElementById("modalAdvertencia"));
+});
+
+function mostrarPeriodosEDL() {
+  const tipoCargo = document.getElementById("tipoCargo").value;
+  const contenedor = document.getElementById("contenedorPeriodos");
+  contenedor.innerHTML = "";
+
+  // Traer número de vigencias desde el input del paso anterior
+  const numVigenciasInput = document.getElementById("numVigencias");
+  const numVigencias = parseInt(numVigenciasInput?.value) || 1;
+
+  if (!tipoCargo) return;
+
+  // Mostrar advertencia si es provisional
+  if (tipoCargo === "provisional") {
+    modalAdvertencia.show();
+  }
+
+  // Generar dinámicamente los periodos
+  for (let i = 1; i <= numVigencias; i++) {
+    const div = document.createElement("div");
+    div.classList.add("card", "p-3", "mb-3", "shadow-sm", "border-0");
+    div.innerHTML = `
+      <h6 class="fw-bold text-secondary mb-3">📅 Periodo ${i}</h6>
+      <div class="row g-3">
+        <div class="col-md-4">
+          <label class="form-label">Desde</label>
+          <input type="date" class="form-control" required>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Hasta</label>
+          <input type="date" class="form-control" required>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Puntaje obtenido</label>
+          <input type="number" step="0.01" min="0" max="9999" maxlength="4" class="form-control" 
+                 placeholder="Ej: 95.5" oninput="validarPuntaje(this)">
+        </div>
+      </div>
+
+      <div class="mt-3">
+        <label class="form-label">Cargar soporte (opcional, PDF)</label>
+        <input type="file" class="form-control" accept=".pdf">
+      </div>
+    `;
+    contenedor.appendChild(div);
+  }
+}
+
+// Validación de puntaje decimal con máximo 4 dígitos
+function validarPuntaje(input) {
+  const valor = input.value;
+  if (!/^\d{0,4}(\.\d{0,2})?$/.test(valor)) {
+    input.value = valor.slice(0, -1);
+  }
+}
+function mostrarOpcionesProducto() {
+  const seleccion = document.getElementById("presentoProducto").value;
+  const contenedorCantidad = document.getElementById("contenedorCantidad");
+  const btnSiguiente = document.getElementById("btn-next5");
+  const camposProductos = document.getElementById("camposProductos");
+  const preguntaCalificacion = document.getElementById("preguntaCalificacion");
+
+  if (seleccion === "si") {
+    contenedorCantidad.style.display = "block";
+    btnSiguiente.disabled = true;
+    preguntaCalificacion.style.display = "none";
+  } else if (seleccion === "no") {
+    contenedorCantidad.style.display = "none";
+    camposProductos.innerHTML = "";
+    preguntaCalificacion.style.display = "none";
+    btnSiguiente.disabled = false;
+  } else {
+    contenedorCantidad.style.display = "none";
+    camposProductos.innerHTML = "";
+    preguntaCalificacion.style.display = "none";
+    btnSiguiente.disabled = true;
+  }
+}
+
+function generarCamposProductos() {
+  const cantidad = parseInt(document.getElementById("Cantidad_de_Productos").value);
+  const contenedor = document.getElementById("camposProductos");
+  const btnSiguiente = document.getElementById("btn-next5");
+  const preguntaCalificacion = document.getElementById("preguntaCalificacion");
+  contenedor.innerHTML = "";
+
+  if (isNaN(cantidad) || cantidad < 1) {
+    btnSiguiente.disabled = true;
+    preguntaCalificacion.style.display = "none";
+    return;
+  }
+
+  for (let i = 1; i <= cantidad; i++) {
+    const div = document.createElement("div");
+    div.classList.add("card", "p-3", "mb-3", "shadow-sm");
+
+    div.innerHTML = `
+      <h6 class="fw-bold text-secondary">📘 Producto ${i}</h6>
+
+      <div class="row mb-2">
+        <div class="col-md-6">
+          <label class="form-label">Desde:</label>
+          <div class="input-group">
+            <select class="form-select">${crearOpciones(31, "Día")}</select>
+            <select class="form-select">${crearMeses()}</select>
+            <select class="form-select">${crearAnios()}</select>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Hasta:</label>
+          <div class="input-group">
+            <select class="form-select">${crearOpciones(31, "Día")}</select>
+            <select class="form-select">${crearMeses()}</select>
+            <select class="form-select">${crearAnios()}</select>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-2">
+        <label class="form-label">Puntaje obtenido:</label>
+        <input type="number" id="puntaje${i}" class="form-control" step="0.01" max="9999" placeholder="Ej: 95.5">
+      </div>
+
+      <div class="mb-2">
+        <label class="form-label">¿Desea cargar soporte en PDF? (opcional)</label>
+        <input type="file" id="soporte${i}" class="form-control" accept=".pdf">
+      </div>
+    `;
+    contenedor.appendChild(div);
+  }
+
+  // ✅ Muestra la tercera pregunta una vez que se generaron los productos
+  preguntaCalificacion.style.display = "block";
+  btnSiguiente.disabled = false;
+}
+
+// Funciones auxiliares
+function crearOpciones(max, label) {
+  let html = `<option value="">${label}</option>`;
+  for (let i = 1; i <= max; i++) html += `<option>${i}</option>`;
+  return html;
+}
+
+function crearMeses() {
+  const meses = [
+    "Enero","Febrero","Marzo","Abril","Mayo","Junio",
+    "Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"
+  ];
+  return `<option value="">Mes</option>` + meses.map(m => `<option>${m}</option>`).join("");
+}
+
+function crearAnios() {
+  const actual = new Date().getFullYear();
+  let html = `<option value="">Año</option>`;
+  for (let a = actual; a >= 2000; a--) html += `<option>${a}</option>`;
+  return html;
+}
+
+function agregarProfesion() {
+  const contenedor = document.getElementById("contenedorProfesiones");
+  const input = document.createElement("input");
+  input.type = "text";
+  input.classList.add("form-control", "mb-2");
+  input.placeholder = "EJ: LICENCIATURA EN EDUCACION FISICA";
+  contenedor.appendChild(input);
+}
+function abrirModalSemestres() {
+  const modal = new bootstrap.Modal(document.getElementById("modalSemestres"));
+  modal.show();
+}
+
+function mostrarCamposEstudio() {
+  const tipo = document.getElementById("Tipo_Estudio").value;
+
+
+  const contenedor = document.getElementById("contenedorCamposEstudio");
+  contenedor.innerHTML = "";
+
+  if (!tipo) return;
+
+  // Si selecciona "semestres cursados"
+  if (tipo === "semestres") {
+   abrirModalSemestres();
+
+    contenedor.innerHTML = `
+      <div class="card p-3 shadow-sm mb-3">
+        <h6 class="fw-bold">Semestres cursados y aprobados</h6>
+        <div class="mb-3">
+          <label class="form-label">1.1 Cantidad de semestres cursados y aprobados:</label>
+          <select class="form-select" id="cantidadSemestres" onchange="generarSemestres()">
+            <option value="">Seleccione...</option>
+            ${[...Array(12).keys()].map(i => `<option>${i + 1}</option>`).join("")}
+          </select>
+        </div>
+        <div id="contenedorSemestres"></div>
+      </div>
+    `;
+  } else {
+    // Si es formación completa
+    contenedor.innerHTML = `
+      <div class="card p-3 shadow-sm">
+        <h6 class="fw-bold text-secondary">📘 Detalles del estudio</h6>
+
+        <div class="mb-2">
+          <label class="form-label">1.0 Nombre del establecimiento educativo:</label>
+          <input type="text" class="form-control" placeholder="EJ: UNIVERSIDAD NACIONAL DE COLOMBIA">
+        </div>
+
+        <div class="mb-2">
+          <label class="form-label">2.0 Título obtenido:</label>
+          <input type="text" class="form-control" placeholder="EJ: INGENIERO ELECTRÓNICO">
+        </div>
+
+        <div class="mb-2">
+          <label class="form-label">3.0 Fecha del título:</label>
+          <div class="input-group">
+            <select class="form-select">${crearOpciones(31, "Día")}</select>
+            <select class="form-select">${crearMeses()}</select>
+            <select class="form-select">${crearAnios()}</select>
+          </div>
+        </div>
+
+        <div class="mb-2">
+          <label class="form-label">4.0 ¿El establecimiento educativo es del exterior?</label>
+          <select class="form-select">
+            <option value="">Seleccione...</option>
+            <option value="si">Sí</option>
+            <option value="no">No</option>
+          </select>
+        </div>
+
+        <div class="mt-3">
+          <label class="form-label">📎 Adjuntar soporte PDF (opcional)</label>
+          <input type="file" class="form-control" multiple accept=".pdf">
+        </div>
+      </div>
+    `;
+  }
+}
+
+function generarSemestres() {
+  const cantidad = parseInt(document.getElementById("cantidadSemestres").value);
+  const contenedor = document.getElementById("contenedorSemestres");
+  contenedor.innerHTML = "";
+
+  for (let i = 1; i <= cantidad; i++) {
+    const div = document.createElement("div");
+    div.classList.add("border", "rounded", "p-3", "mb-3", "bg-light");
+    div.innerHTML = `
+      <h6 class="fw-bold text-secondary">📘 Semestre ${i}</h6>
+
+      <div class="mb-2">
+        <label class="form-label">Fechas del semestre:</label>
+        <div class="input-group">
+          <div class="row mb-2">
+        <div class="col-md-6">
+          <label class="form-label">Desde:</label>
+          <div class="input-group">
+            <select class="form-select">${crearOpciones(31, "Día")}</select>
+            <select class="form-select">${crearMeses()}</select>
+            <select class="form-select">${crearAnios()}</select>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Hasta:</label>
+          <div class="input-group">
+            <select class="form-select">${crearOpciones(31, "Día")}</select>
+            <select class="form-select">${crearMeses()}</select>
+            <select class="form-select">${crearAnios()}</select>
+          </div>
+        </div>
+      </div>
+        </div>
+      </div>
+
+      <div class="mb-2">
+        <label class="form-label">Nombre del programa académico:</label>
+        <input type="text" class="form-control" placeholder="EJ: ADMINISTRACION DE EMPRESAS">
+      </div>
+
+      <div class="mb-2">
+        <label class="form-label">Tipo de formación:</label>
+        <select class="form-select">
+          <option>Formación técnica profesional</option>
+          <option>Formación tecnológica</option>
+          <option>Formación universitaria</option>
+        </select>
+      </div>
+
+      <div class="mb-2">
+        <label class="form-label">¿El semestre es afín a su área de desempeño?</label>
+        <select class="form-select">
+          <option>Sí</option>
+          <option>No</option>
+        </select>
+      </div>
+
+      <div class="mb-2">
+        <label class="form-label">¿El semestre proviene del exterior?</label>
+        <select class="form-select" onchange="mostrarApostilla(this)">
+          <option value="">Seleccione...</option>
+          <option value="si">Sí</option>
+          <option value="no">No</option>
+        </select>
+
+        <div class="mt-2" style="display:none">
+          <label class="form-label">¿Cuenta con apostillamiento y/o legalización?</label>
+          <select class="form-select">
+            <option>Sí</option>
+            <option>No</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="mt-3">
+        <label class="form-label">📎 Adjuntar soporte PDF (opcional)</label>
+        <input type="file" class="form-control" multiple accept=".pdf">
+      </div>
+    `;
+    contenedor.appendChild(div);
+  }
+}
+
+function mostrarApostilla(select) {
+  const extra = select.nextElementSibling;
+  extra.style.display = select.value === "si" ? "block" : "none";
+}
+
+// Funciones auxiliares de fechas
+function crearOpciones(max, label) {
+  let html = `<option value="">${label}</option>`;
+  for (let i = 1; i <= max; i++) html += `<option>${i}</option>`;
+  return html;
+}
+
+function crearMeses() {
+  const meses = [
+    "Enero","Febrero","Marzo","Abril","Mayo","Junio",
+    "Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"
+  ];
+  return `<option value="">Mes</option>` + meses.map(m => `<option>${m}</option>`).join("");
+}
+
+function crearAnios() {
+  const actual = new Date().getFullYear();
+  let html = `<option value="">Año</option>`;
+  for (let a = actual; a >= 1980; a--) html += `<option>${a}</option>`;
+  return html;
+}
+
+function validarHorasCapacitacion() {
+  const opcion = document.getElementById("cap_horas_opcion").value;
+  const contenedor = document.getElementById("cap_input_horas");
+
+  if (opcion === "menos") {
+    const modal = new bootstrap.Modal(document.getElementById("modalHorasMenos"));
+    modal.show();
+    contenedor.style.display = "none";
+    document.getElementById("cap_horas_opcion").value = "";
+    return;
+  }
+
+  if (opcion === "mas") {
+    contenedor.style.display = "block";
+  }
+}
+
+function validarAsistencial() {
+  const opcion = document.getElementById("cap_asistencial").value;
+  const contenedor = document.getElementById("cap_asistencial_horas");
+
+  if (opcion === "si") {
+    const modal = new bootstrap.Modal(document.getElementById("modalAsistencial"));
+    modal.show();
+    contenedor.style.display = "block";
+    document.getElementById("cap_asist_horas_valor").setAttribute("min", "30");
+    return;
+  }
+
+  contenedor.style.display = "none";
+}
+// ====== NUEVO: Mostrar resumen de PDFs ======
+function mostrarResumenArchivos() {
+  const lista = document.getElementById("listaArchivos");
+  lista.innerHTML = ""; // limpiar
+
+  // Buscar TODOS los inputs tipo file del formulario
+  const inputsFiles = document.querySelectorAll("input[type='file']");
+
+  let archivosEncontrados = 0;
+
+  inputsFiles.forEach(input => {
+    if (input.files.length > 0) {
+      archivosEncontrados++;
+
+      const file = input.files[0];
+      const li = document.createElement("li");
+      li.classList.add("list-group-item");
+
+      const sizeKB = (file.size / 1024).toFixed(1);
+      const fecha = new Date().toLocaleString();
+
+      li.textContent = `📄 ${file.name} — ${sizeKB} KB — Subido el ${fecha}`;
+
+      lista.appendChild(li);
+    }
+  });
+
+  if (archivosEncontrados === 0) {
+    alert("No has subido ningún archivo PDF aún.");
+    return;
+  }
+
+  // Mostrar el resumen
+  document.getElementById("resumenArchivos").style.display = "block";
+
+  // Ocultar formulario principal si deseas
+  document.getElementById("pasofinal").style.display = "none";
+}
+
+
+
+// ====== Tus funciones existentes ======
+function abrirModalConfirmacion() {
+  new bootstrap.Modal(document.getElementById("modalConfirmarEnvio")).show();
+}
+
+function abrirModalAutorizaciones() {
+  let modal1 = bootstrap.Modal.getInstance(document.getElementById("modalConfirmarEnvio"));
+  modal1.hide();
+
+  new bootstrap.Modal(document.getElementById("modalAutorizaciones")).show();
+}
+
+function finalizarEnvio() {
+  const datos = document.getElementById("check_datos").checked;
+  const veracidad = document.getElementById("check_veracidad").checked;
+  const notificaciones = document.getElementById("check_notificaciones").checked;
+
+  if (!datos || !veracidad || !notificaciones) {
+    alert("Debe aceptar todas las validaciones antes de continuar.");
+    return;
+  }
+
+  let modal2 = bootstrap.Modal.getInstance(document.getElementById("modalAutorizaciones"));
+  modal2.hide();
+
+  new bootstrap.Modal(document.getElementById("modalExito")).show();
+  document.getElementById("puntajeFinal").innerText = puntajeTotal;
+}
+
+function irAInicio() {
+  window.location.href = "/instructor"; 
+}
+
+
+// 1️⃣ Calcular puntaje del tipo de estudio
+function actualizarPuntajeEstudio() {
+    const tipo = document.getElementById("Tipo_Estudio").value;
+
+    const puntajes = {
+        tecnica: 4,
+        tecnologica: 8,
+        universitaria: 10,
+        especializacion_tecnologica: 10,
+        especializacion_universitaria: 12,
+        maestria: 15,
+        doctorado: 18,
+        semestres: 0
+    };
+
+    puntajeEducacion = puntajes[tipo] || 0;
+
+    actualizarPuntajeTotal();
+}
+
+// 2️⃣ Calcular puntaje del producto técnico-pedagógico
+function actualizarPuntajeProducto() {
+    const valor = Number(document.getElementById("puntajeProductoInput").value);
+
+    // Validar límites
+    if (valor < 0 || valor > 6) {
+        puntajeProducto = 0;
+        return;
+    }
+
+    puntajeProducto = valor;
+
+    actualizarPuntajeTotal();
+}
+
+// 3️⃣ Sumar ambos puntajes
+function actualizarPuntajeTotal() {
+    const puntajeTotal = puntajeEducacion + puntajeProducto;
+
+    // Mostrar el resultado en el modal de éxito
+    const resultado = document.getElementById("puntajeFinalTexto");
+    if (resultado) {
+        resultado.textContent = puntajeTotal;
+    }
+
+    console.log("Puntaje total:", puntajeTotal);
+}
+
+async function finalizarEnvio() {
+  const datos = document.getElementById("check_datos")?.checked;
+  const veracidad = document.getElementById("check_veracidad")?.checked;
+  const notificaciones = document.getElementById("check_notificaciones")?.checked;
+
+  if (!datos || !veracidad || !notificaciones) {
+    alert("Debe aceptar todas las validaciones antes de continuar.");
+    return;
+  }
+
+  try {
+    const modalAut = bootstrap.Modal.getInstance(document.getElementById("modalAutorizaciones"));
+    if (modalAut) modalAut.hide();
+  } catch {}
+
+  const formData = new FormData();
+
+  formData.append("titulo", "Formulario de evaluación");
+  formData.append("descripcion", "Documentos subidos desde el formulario");
+
+  // 1. Capturar todo el formulario como FormData
+const formElement = document.getElementById("formEvidencias");
+const formFields = new FormData(formElement);
+
+// 2. Convertir los campos en JSON
+let jsonFormulario = {};
+
+formFields.forEach((value, key) => {
+    if (jsonFormulario[key]) {
+        // si existe la clave → convertir en array (checkboxes)
+        if (!Array.isArray(jsonFormulario[key])) {
+            jsonFormulario[key] = [jsonFormulario[key]];
+        }
+        jsonFormulario[key].push(value);
+    } else {
+        jsonFormulario[key] = value;
+    }
+});
+
+// 3. Guardar el JSON en el FormData principal
+formData.append("formulario_json", JSON.stringify(jsonFormulario));
+
+
+  // id_categoria_fk → debe ser un entero
+  formData.append("id_categoria_fk", parseInt(5)); // "otro"
+
+  // id_usuario_fk → entero obligatorio
+  const userId = parseInt(localStorage.getItem("user_id"));
+  if (!userId) {
+    alert("No se encontró user_id en localStorage.");
+    return;
+  }
+  formData.append("id_usuario_fk", userId);
+
+  // reportes_id_reporte → NO mandar si está vacío
+  const reporteId = null;
+  if (reporteId !== null && reporteId !== "" && !isNaN(reporteId)) {
+    formData.append("reportes_id_reporte", parseInt(reporteId));
+  }
+
+  // ARCHIVOS
+  const inputsFiles = document.querySelectorAll("#formEvidencias input[type='file']");
+  let totalFiles = 0;
+
+  inputsFiles.forEach(input => {
+    for (const f of input.files) {
+      formData.append("files", f);
+      totalFiles++;
+    }
+  });
+
+  if (totalFiles === 0) {
+    alert("No ha seleccionado archivos para subir.");
+    return;
+  }
+
+  try {
+    const token = localStorage.getItem("ssemi_token") || "";
+
+    const res = await fetch(`${API_BASE}/evidencias/multiple`, {
+      method: "POST",
+      headers: {
+        Authorization: token ? `Bearer ${token}` : ""
+      },
+      body: formData,
+    });
+
+    if (!res.ok) {
+      const errJson = await res.json().catch(() => null);
+
+      let msg = "Error desconocido";
+      if (errJson) {
+        if (typeof errJson.detail === "string") msg = errJson.detail;
+        else if (Array.isArray(errJson.detail)) msg = errJson.detail.map(d => d.msg).join("\n");
+      }
+
+      alert("❌ " + msg);
+      return;
+    }
+
+    const respuesta = await res.json();
+    console.log("Respuesta del servidor:", respuesta);
+
+    new bootstrap.Modal(document.getElementById("modalExito")).show();
+
+  } catch (err) {
+    console.error(err);
+    alert("❌ Error de conexión con el servidor.");
+  }
+}
+
+
+</script>
+
+
+<!--Bootstrap-->
+<script 
+  src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" 
+  integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" 
+  crossorigin="anonymous"></script>
+  
+
+  <!-- ============================
+ RESUMEN DE ARCHIVOS SUBIDOS
+=============================== -->
+<div id="resumenArchivos" class="container mt-4" style="display:none;">
+  <h3 class="mb-3">📄 Archivos cargados</h3>
+
+  <ul id="listaArchivos" class="list-group mb-4"></ul>
+
+  <div class="text-end">
+    <button class="btn btn-success custom-orange-btn text-white px-4 py-2 rounded-pill"
+      onclick="abrirModalConfirmacion()">
+      Enviar solicitud 🚀
+    </button>
+  </div>
+</div>
+
+  <!-- MODAL BOOTSTRAP ADVERTENCIA SEMESTRES -->
+<div class="modal fade" id="modalSemestres" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow-lg border-0" style="border-radius: 20px;">
+
+      <div class="modal-header" style="background:  #ff6600; border-bottom: none; border-radius: 20px 20px 0 0;">
+        <h5 class="modal-title fw-bold text-warning text-white">⚠️ Atención</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body text-center py-4">
+        <p class="fs-5">
+          
+            <em>Unicamente se ponderarán semestres cursados y aprobados
+            que cuenten con certificaciones semestralizadas.</em>
+          
+        </p>
+        <i class="bi bi-exclamation-triangle-fill text-warning" style="font-size: 3.5rem;"></i>
+      </div>
+
+      <div class="modal-footer justify-content-center" style="border-top: none;">
+        <button class="btn text-white px-4 py-2" 
+                style="background-color:  #ff6600; border-radius: 25px;"
+                data-bs-dismiss="modal">
+          Entendido
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="modalHorasMenos" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content p-3">
+      <h5 class="text-danger fw-bold">⚠️ No permitido</h5>
+      <p class="mt-3">
+        SEGÚN LA NORMA, NO SE VALORAN CAPACITACIONES DE MENOS DE 15 HORAS.
+      </p>
+      <button class="btn btn-danger mt-3" data-bs-dismiss="modal">Entendido</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalAsistencial" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content p-3">
+      <h5 class="text-warning fw-bold">⚠️ Advertencia</h5>
+      <p class="mt-3">
+        LAS CAPACITACIONES ÚNICAMENTE ASISTENCIALES DEBEN TENER MÍNIMO 30 HORAS,
+        DE LAS CUALES SOLO SE PONDERARÁ EL 50%.
+      </p>
+      <button class="btn btn-warning mt-3" data-bs-dismiss="modal">Entendido</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalConfirmarEnvio" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow-lg">
+
+      <div class="modal-header-custom">
+        <h4 class="fw-bold m-0">
+          ⚠️ Confirmación de envío
+        </h4>
+      </div>
+
+      <div class="text-center mt-4">
+        <i class="bi bi-exclamation-triangle-fill modal-icon"></i>
+      </div>
+
+      <div class="p-3 text-center">
+        <p class="mt-3">
+          ¿Está seguro de <strong>radicar su solicitud</strong>?<br>
+          <span class="fw-bold text-danger">
+            Una vez enviada NO podrá modificar ni agregar documentación.
+          </span>
+        </p>
+      </div>
+
+      <div class="text-end mt-3 mb-3 px-3">
+        <button class="btn custom-orange-btn text-white me-2" data-bs-dismiss="modal">Cancelar</button>
+
+        <button class="btn custom-orange-btn text-white" onclick="abrirModalAutorizaciones()">
+          Aceptar y continuar
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="modalAutorizaciones" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow-lg">
+
+      <div class="modal-header-custom">
+        <h4 class="fw-bold m-0">📄 Validaciones obligatorias</h4>
+      </div>
+
+      <div class="p-4">
+
+        <div class="mb-3 d-flex">
+          <input class="form-check-input me-2" type="checkbox" id="check_datos">
+          <label>Autorizo el tratamiento de datos personales (Ley 1581 de 2012).</label>
+        </div>
+
+        <div class="mb-3 d-flex">
+          <input class="form-check-input me-2" type="checkbox" id="check_veracidad">
+          <label>Declaro que la información y documentos aportados son veraces.</label>
+        </div>
+
+        <div class="mb-3 d-flex">
+          <input class="form-check-input me-2" type="checkbox" id="check_notificaciones">
+          <label>Autorizo notificaciones al correo registrado.</label>
+        </div>
+
+        <div class="text-end mt-3">
+          <button class="btn me-2 custom-orange-btn text-white" data-bs-dismiss="modal">Cancelar</button>
+
+          <button class="btn custom-orange-btn text-white" onclick="finalizarEnvio()">
+            Aceptar ✔
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="modalExito" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow-lg text-center">
+
+      <div class="p-4">
+
+        <i class="bi bi-check-circle-fill modal-success-icon mb-3"></i>
+
+        <h3 class="fw-bold text-success">¡Solicitud enviada!</h3>
+        <p class="text-center mt-3">
+  Puntaje obtenido parcialmente: 
+  <span id="puntajeFinalTexto" class="fw-bold text-success"></span>
+</p>
+
+        <p class="mt-2">
+          Los resultados estarán disponibles en la plataforma SSEMI.
+        </p>
+
+        <button class="btn custom-orange-btn text-white px-4 mt-3" onclick="irAInicio()">
+          Ir al inicio
+        </button>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+</body>
+</html>

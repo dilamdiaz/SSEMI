@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Panel de Evaluador</h2>
+  <table class="table">
+    <thead><tr><th>Título</th><th>Fecha</th><th>Estado</th><th>Acción</th></tr></thead>
+    <tbody>
+    {% for e in evidencias %}
+      <tr>
+        <td>{{ e.titulo }}</td>
+        <td>{{ e.fecha_evidencia }}</td>
+        <td>{{ e.estado_evidencia }}</td>
+        <td><a href="{{ url_for('evaluador.evaluar_evidencia', id=e.id_evidencia) }}" class="btn btn-primary btn-sm">Evaluar</a></td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

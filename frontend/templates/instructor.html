@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Panel Instructor - SSEMI</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ssemi-orange: #ff8533;
+            --ssemi-orange-hover: #e67300;
+            --shadow-light: 0 6px 16px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 10px 22px rgba(255, 133, 51, 0.3);
+        }
+        
+        body {
+            background-color: #f7f8fc;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding-bottom: 70px;
+            color: #333;
+        }
+        
+        /* ====== Topbar ====== */
+        .topbar {
+            background-color: var(--ssemi-orange);
+            color: #fff;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            font-weight: 600;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+        
+        .topbar .btn {
+            font-weight: 600;
+        }
+        
+        /* ====== Dashboard ====== */
+        .dashboard {
+            margin-top: 100px;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .dashboard .card {
+            border: none;
+            border-radius: 1.2rem;
+            background: #fff;
+            box-shadow: var(--shadow-light);
+            padding: 2rem 1.5rem;
+            height: 100%;
+            text-align: center;
+            transition: all 0.25s ease;
+            position: relative;
+        }
+        
+        .dashboard .card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-hover);
+        }
+        
+        .dashboard h5 {
+            color: var(--ssemi-orange);
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+        }
+        
+        .dashboard p {
+            color: #6c757d;
+            font-size: 0.95rem;
+            min-height: 50px;
+        }
+        
+        .btn-orange {
+            background-color: var(--ssemi-orange);
+            color: #fff;
+            font-weight: 600;
+            border-radius: 0.8rem;
+            transition: all 0.2s ease;
+            border: none;
+        }
+        
+        .btn-orange:hover {
+            background-color: var(--ssemi-orange-hover);
+            transform: translateY(-2px);
+        }
+        
+        /* ====== Footer ====== */
+        footer {
+            background-color: var(--ssemi-orange);
+            color: #fff;
+            padding: 14px;
+            text-align: center;
+            font-size: 0.9rem;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* ====== Modal Style General ====== */
+        .modal-header {
+            background-color: var(--ssemi-orange);
+            color: #fff;
+            border: none;
+        }
+        
+        .modal-content {
+            border-radius: 1rem;
+            box-shadow: var(--shadow-hover);
+            animation: zoomIn 0.3s ease;
+        }
+        
+        @keyframes zoomIn {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+        
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        .modal-footer .btn-orange {
+            background-color: var(--ssemi-orange);
+            border: none;
+        }
+        
+        .modal-footer .btn-orange:hover {
+            background-color: var(--ssemi-orange-hover);
+        }
+        
+        /* ====== Modal Perfil ====== */
+        #profileContainer label {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 0.5rem;
+        }
+        
+        #profileContainer input[readonly] {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            cursor: not-allowed;
+        }
+        
+        #profileContainer input.editable {
+            border: 2px solid var(--ssemi-orange) !important;
+            box-shadow: 0 0 8px rgba(255, 133, 51, 0.4);
+            background-color: #fffaf5;
+        }
+
+        /* ====== Modal Recordatorios ====== */
+        /* Clases CSS añadidas para el nuevo color naranja */
+        .bg-ssemi-orange {
+            background-color: var(--ssemi-orange) !important;
+        }
+
+        #recordatoriosList li {
+            border-bottom: 1px dashed #eee;
+            padding: 8px 0;
+        }
+        #recordatoriosList a {
+            font-weight: 600;
+            color: #333;
+            text-decoration: none;
+            display: block;
+        }
+        #recordatoriosList a:hover {
+            color: var(--ssemi-orange);
+        }
+        #recordatoriosList small {
+            display: block;
+            color: #888;
+            font-size: 0.85em;
+        }
+        
+        /* ====== Notificación circular ====== */
+        .notification-dot {
+            position: absolute;
+            top: 12px;
+            right: 18px;
+            width: 14px;
+            height: 14px;
+            background-color: #e67300;
+            border-radius: 50%;
+            box-shadow: 0 0 6px rgba(230, 115, 0, 0.6);
+            animation: pulse 1.5s infinite;
+            z-index: 10;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.9;
+            }
+        
+            50% {
+                transform: scale(1.3);
+                opacity: 0.6;
+            }
+        
+            100% {
+                transform: scale(1);
+                opacity: 0.9;
+            }
+        }
+        
+        /* slightly smaller modal inputs on mobile */
+        @media (max-width: 576px) {
+            #profileContainer input {
+                font-size: 0.95rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="topbar">
+        <span>Panel de Instructor - SSEMI</span>
+        <div>
+            <button id="btnRecordatorios" class="btn btn-light btn-sm me-2 position-relative">
+                🔔 Recordatorios
+            </button>
+            <button id="viewProfile" class="btn btn-light btn-sm me-2">Perfil</button>
+            <button onclick="logout()" class="btn btn-outline-light btn-sm">Cerrar sesión</button>
+        </div>
+    </header>
+    <main class="container dashboard">
+        <div class="row g-4 justify-content-center text-center">
+            <div class="col-md-5">
+                <div class="card">
+                    <h5>Solicitud de Evaluación</h5>
+                    <p>Bajo la gravedad de juramento, certifico que la información aquí registrada es veraz, completa y corresponde a la realidad.</p>
+                    <button class="btn btn-orange w-100" id="btnAbrirJuramento">Ir</button>
+                </div>
+                
+            </div>
+
+            <div class="col-md-5">
+                <div class="card">
+                    <h5>Historial de Evidencias</h5>
+                    <p>Consulta las evidencias que has cargado y su estado actual.</p>
+                    <a href="historial_evidencias" class="btn btn-orange w-100">Ir</a>
+                </div>
+            </div>
+
+            <div class="col-md-5">
+                <div class="card">
+                    <h5>Resultados</h5>
+                    <p>Revisa los resultados de tus evaluaciones y retroalimentaciones.</p>
+                    <a href="resultados" class="btn btn-orange w-100">Ir</a>
+                </div>
+            </div>
+
+            <div class="col-md-5 position-relative">
+                <div class="card position-relative">
+                    <h5>Bandeja de Mensajes</h5>
+                    <p>Consulta tus notificaciones o comunícate con los evaluadores.</p>
+                    <a href="mensajes" class="btn btn-orange w-100">Ir</a>
+
+                    <div id="notificacionMensajes" class="notification-dot" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>© 2025 Sistema SSEMI | Todos los derechos reservados</footer>
+
+    <div class="modal fade" id="profileModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content" id="profileContainer">
+                <div class="modal-header">
+                    <h5 class="modal-title">Perfil del Instructor</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    
+                </div>
+
+                <div class="modal-body row g-3">
+                    <div class="col-md-6">
+                        <label>Primer nombre</label>
+                        <input type="text" id="profileFirstName" class="form-control" readonly />
+                    </div>
+                    <div class="col-md-6">
+                        <label>Segundo nombre</label>
+                        <input type="text" id="profileSecondName" class="form-control" readonly />
+                        
+                    </div>
+                    <div class="col-md-6">
+                        <label>Primer apellido</label>
+                        <input type="text" id="profileLastName" class="form-control" readonly />
+                    </div>
+                    <div class="col-md-6">
+                        <label>Segundo apellido</label>
+                        <input type="text" id="profileSecondLastName" class="form-control" readonly />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label>Tipo documento</label>
+                        <input type="text" id="profileDocType" class="form-control" readonly />
+                    </div>
+                    <div class="col-md-6">
+                        <label>Número documento</label>
+                        <input type="text" id="profileDocNumber" class="form-control" readonly />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label>Correo</label>
+                        <input type="text" id="profileEmail" class="form-control" readonly />
+                    </div>
+                    <div class="col-md-6">
+                        <label>Teléfono</label>
+                        <input type="text" id="profilePhone" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label>Dirección</label>
+                        <input type="text" id="profileAddress" class="form-control" />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label>Grado</label>
+                        <input type="text" id="profileGrade" class="form-control" readonly />
+                    </div>
+                    <div class="col-md-6">
+                        <label>Regional</label>
+                        <input type="text" id="profileRegional" class="form-control" readonly />
+                    </div>
+
+                    <div class="col-md-3">
+                        <label>Rol</label>
+                        <input type="text" id="profileRole" class="form-control" readonly />
+                    </div>
+                    <div class="col-md-3">
+                        <label>Estado</label>
+                        <input type="text" id="profileStatus" class="form-control" readonly />
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button id="saveProfile" class="btn btn-success">Guardar cambios</button>
+                    <button id="solicitudBtn" class="btn btn-orange">Solicitar corrección</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalJuramento" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content shadow-lg border-0">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold">Confirmar Declaración</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <p class="fw-semibold">Bajo la gravedad de juramento, certifico que la información aquí registrada es veraz, completa y corresponde a la realidad.</p>
+                    <p class="text-muted">¿Desea continuar con el proceso de solicitud de evaluación?</p>
+                </div>
+                <div class="modal-footer justify-content-center pb-4">
+                    <a href="solicitud_evaluacion" class="btn btn-orange px-4">Aceptar y Continuar</a>
+                    <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalRecordatorios" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content shadow-lg border-0">
+                
+                <div class="modal-header bg-ssemi-orange">
+                    <h5 class="modal-title fw-bold text-white">🔔 Recordatorios Pendientes</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    
+                    <p id="noRecordatorios" class="text-center text-muted m-0" style="display:none;">No tienes recordatorios de tareas o eventos importantes pendientes.</p>
+                    <ul id="recordatoriosList" class="list-unstyled">
+                        </ul>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* ===========================
+        CONFIGURACIÓN / VARIABLES
+        =========================== */
+        const BASE_URL = 'http://127.0.0.1:8000'
+        let token = localStorage.getItem('ssemi_token')
+        let originalData = {}
+        let correctionMode = false
+        let currentUserId = null
+        
+        // Campos que se pueden solicitar corrección (no editables directamente)
+        const correctionFields = ['profileFirstName', 'profileSecondName', 'profileLastName', 'profileSecondLastName', 'profileDocType', 'profileDocNumber', 'profileEmail', 'profileGrade', 'profileRegional']
+        
+        /* ===========================
+        UTILIDADES (CORREGIDO FINAL)
+        =========================== */
+        
+        function getUserIdFromToken() {
+            try {
+                if (!token) return null
+                
+                // 1. Obtener el payload (segunda parte del JWT)
+                const parts = token.split('.');
+                if (parts.length < 2) return null;
+                const payloadBase64 = parts[1];
+
+                // 2. Decodificar de Base64 y parsear a JSON
+                const payload = JSON.parse(atob(payloadBase64));
+
+                // 🚀 PASO DE DEBUGGING CLAVE: Muestra el payload completo para saber qué campo usar
+                console.log("🚀 PAYLOAD DECODIFICADO:", payload); 
+                
+                // 3. Extraer el ID. Se usa 'role' como alternativa final, ya que contiene el ID numérico.
+                const userIdRaw = payload.id || payload.user_id || payload.id_usuario || payload.role; 
+
+                if (!userIdRaw) {
+                    console.error("Token payload no contiene campos de ID numérico conocidos.");
+                    return null;
+                }
+
+                // 4. Convertir a entero y validar
+                const userId = parseInt(userIdRaw);
+                
+                if (isNaN(userId)) {
+                    console.error("El valor obtenido del token no es un número válido (valor detectado):", userIdRaw);
+                    return null;
+                }
+
+                return userId;
+
+            } catch (error) {
+                console.error('Error al decodificar token o al leer ID:', error);
+                return null;
+            }
+        }
+        
+        function getValorOriginal(campo) {
+            const map = {
+                firstname: originalData.primer_nombre,
+                secondname: originalData.segundo_nombre,
+                lastname: originalData.primer_apellido,
+                secondlastname: originalData.segundo_apellido,
+                doctype: originalData.tipo_documento,
+                docnumber: originalData.numero_documento,
+                email: originalData.correo,
+                grade: originalData.grado,
+                regional: originalData.regional
+            }
+            return map[campo] || ''
+        }
+        
+        /* ===========================
+        CARGA Y GESTIÓN DE PERFIL
+        =========================== */
+        
+        async function loadUserProfile() {
+            if (!token) {
+                alert('Debe iniciar sesión.')
+                return
+            }
+        
+            const modalEl = document.getElementById('profileModal')
+            const modal = new bootstrap.Modal(modalEl)
+            modal.show()
+        
+            try {
+                const res = await fetch(`${BASE_URL}/me`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                })
+        
+                if (!res.ok) {
+                    const errText = await res.text()
+                    console.error('Error al cargar perfil:', errText)
+                    throw new Error('Error al cargar perfil')
+                }
+        
+                const data = await res.json()
+                originalData = data
+                currentUserId = getUserIdFromToken() // Asegura que el ID esté cargado
+        
+                // Rellenar campos
+                document.getElementById('profileFirstName').value = data.primer_nombre || ''
+                document.getElementById('profileSecondName').value = data.segundo_nombre || ''
+                document.getElementById('profileLastName').value = data.primer_apellido || ''
+                document.getElementById('profileSecondLastName').value = data.segundo_apellido || ''
+                document.getElementById('profileDocType').value = data.tipo_documento || ''
+                document.getElementById('profileDocNumber').value = data.numero_documento || ''
+                document.getElementById('profileEmail').value = data.correo || ''
+                document.getElementById('profilePhone').value = data.numero_contacto || ''
+                document.getElementById('profileAddress').value = data.direccion || ''
+                document.getElementById('profileGrade').value = data.grado || ''
+                document.getElementById('profileRegional').value = data.regional || ''
+                document.getElementById('profileRole').value = data.rol_fk || ''
+                document.getElementById('profileStatus').value = data.estado ? 'Activo' : 'Inactivo'
+            } catch (error) {
+                console.error('Error al cargar perfil:', error)
+                alert('❌ Error al cargar el perfil del usuario')
+            }
+        }
+        
+        async function saveProfileChanges() {
+            const phone = document.getElementById('profilePhone').value
+            const address = document.getElementById('profileAddress').value
+        
+            try {
+                const res = await fetch(`${BASE_URL}/me`, {
+                    method: 'PUT',
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        numero_contacto: phone,
+                        direccion: address
+                    })
+                })
+        
+                if (!res.ok) {
+                    const errText = await res.text()
+                    console.error('Error al guardar cambios:', errText)
+                    throw new Error('Error al guardar cambios')
+                }
+        
+                alert('✅ Datos actualizados correctamente')
+                originalData.numero_contacto = phone
+                originalData.direccion = address
+            } catch (error) {
+                console.error('Error al guardar:', error)
+                alert('❌ No se pudieron guardar los cambios')
+            }
+        }
+        
+        /* ===========================
+        SOLICITUDES DE CORRECCIÓN
+        =========================== */
+        
+        function toggleCorrectionMode() {
+            correctionMode = !correctionMode
+        
+            correctionFields.forEach((id) => {
+                const el = document.getElementById(id)
+                if (!el) return
+                el.readOnly = !correctionMode
+                el.classList.toggle('editable', correctionMode)
+            })
+        
+            const btn = document.getElementById('solicitudBtn')
+            btn.textContent = correctionMode ? 'Enviar solicitud' : 'Solicitar corrección'
+        
+            if (!correctionMode && originalData) { // Asegúrate de que no se envíen si se desactiva sin cambios
+                enviarSolicitudes()
+            }
+        }
+        
+        async function enviarSolicitudes() {
+            if (!currentUserId) {
+                alert('No se pudo obtener el ID del usuario desde el token.')
+                return
+            }
+        
+            const fieldMap = {
+                profileFirstName: 'Primer Nombre',
+                profileSecondName: 'Segundo Nombre',
+                profileLastName: 'Primer Apellido',
+                profileSecondLastName: 'Segundo Apellido',
+                profileDocType: 'Tipo Documento',
+                profileDocNumber: 'Número Documento',
+                profileEmail: 'Correo',
+                profileGrade: 'Grado',
+                profileRegional: 'Regional'
+            }
+        
+            const changes = []
+        
+            correctionFields.forEach((id) => {
+                const campo = id.replace('profile', '').toLowerCase()
+                const nuevo = document.getElementById(id).value
+                const actual = String(getValorOriginal(campo))
+        
+                if (nuevo !== actual) {
+                    changes.push({
+                        id_usuario_fk: currentUserId,
+                        campo_a_modificar: fieldMap[id],
+                        valor_actual: actual,
+                        nuevo_valor: nuevo,
+                        motivo: 'Actualización de datos personales'
+                    })
+                }
+            })
+        
+            if (changes.length === 0) {
+                alert('No se detectaron cambios para enviar.')
+                return
+            }
+        
+            try {
+                let successCount = 0;
+                let errorCount = 0;
+
+                for (const ch of changes) {
+                    const res = await fetch(`${BASE_URL}/solicitudes-correccion/`, {
+                        method: 'POST',
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(ch)
+                    })
+        
+                    if (!res.ok) {
+                        const errText = await res.text()
+                        console.error(`Error al registrar solicitud para ${ch.campo_a_modificar}:`, errText)
+                        errorCount++;
+                    } else {
+                        successCount++;
+                    }
+                }
+        
+                if (errorCount === 0) {
+                    alert('✅ Todas las solicitudes fueron enviadas correctamente.')
+                } else {
+                    alert(`⚠️ Se enviaron ${successCount} solicitudes, pero ${errorCount} fallaron. Revisa la consola para más detalles.`)
+                }
+            } catch (error) {
+                console.error('Error de red al enviar solicitudes:', error)
+                alert('❌ Ocurrió un error de conexión al enviar las solicitudes.')
+            }
+        }
+        
+        // --- Botones
+        document.getElementById('solicitudBtn').addEventListener('click', toggleCorrectionMode)
+        document.getElementById('saveProfile').addEventListener('click', saveProfileChanges)
+        document.getElementById('viewProfile').addEventListener('click', loadUserProfile)
+        
+        /* =====================================
+        RECORDATORIOS AUTOMÁTICOS (RF026)
+        ===================================== */
+        
+        async function loadAndShowRecordatorios() {
+            if (!token) return
+
+            // Llama a la función corregida
+            currentUserId = getUserIdFromToken()
+            
+            if (!currentUserId) {
+                console.error("ID de usuario no encontrado, no se pueden cargar recordatorios.");
+                return; 
+            }
+
+            const url = `${BASE_URL}/api/recordatorios/notificaciones/pendientes/${currentUserId}`;
+            
+            try {
+                const res = await fetch(url, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+
+                if (res.status === 401) {
+                    console.warn('Sesión expirada o no autorizada para recordatorios.');
+                    renderRecordatoriosModal([]);
+                    return;
+                }
+
+                if (!res.ok) {
+                    const errText = await res.text();
+                    console.error('Error al cargar recordatorios:', errText);
+                    renderRecordatoriosModal([]); 
+                    return;
+                }
+                
+                const notificaciones = await res.json();
+                
+                // Mostrar el modal siempre, incluso si no hay notificaciones
+                renderRecordatoriosModal(notificaciones || []); 
+                
+            } catch (error) {
+                console.error('Error en la conexión al API de recordatorios:', error);
+                renderRecordatoriosModal([]);
+            }
+        }
+
+        function renderRecordatoriosModal(notificaciones) {
+            const list = document.getElementById('recordatoriosList');
+            const noRecordatorios = document.getElementById('noRecordatorios');
+            const modalEl = document.getElementById('modalRecordatorios');
+
+            // Manejo de error si el contenedor principal de la lista no existe
+            if (!list) {
+                console.error("Error: Elemento 'recordatoriosList' no encontrado.");
+                return;
+            }
+
+            list.innerHTML = ''; // Limpiar lista
+            
+            if (notificaciones.length === 0) {
+                // Muestra el párrafo "No tienes recordatorios..."
+                if (noRecordatorios) { 
+                    noRecordatorios.style.display = 'block'; 
+                }
+            } else {
+                // Oculta el párrafo "No tienes recordatorios..."
+                if (noRecordatorios) {
+                    noRecordatorios.style.display = 'none';
+                }
+
+                notificaciones.forEach(noti => {
+                    const li = document.createElement('li');
+                    // Usamos el enlace directo y la llamada a la función para marcar como leída
+                    li.innerHTML = `
+                        <a href="${noti.enlace_directo || '#'}" onclick="marcarComoLeida(${noti.id});">
+                            ${noti.mensaje.replace(/\*\*/g, '')}
+                            <small>Enviado el: ${noti.fecha_envio}</small>
+                        </a>
+                    `;
+                    list.appendChild(li);
+                });
+            }
+
+            // Muestra el modal
+            if (modalEl) {
+                const modal = new bootstrap.Modal(modalEl);
+                modal.show();
+            } else {
+                console.error("Error: Elemento modalRecordatorios no encontrado.");
+            }
+        }
+
+        async function marcarComoLeida(id_notificacion) {
+            // Esta función se llama al hacer clic en un recordatorio para navegar a la tarea
+            try {
+                const res = await fetch(`${BASE_URL}/api/recordatorios/marcar_leida/${id_notificacion}`, {
+                    method: 'POST',
+                    headers: {  
+                        Authorization: `Bearer ${token}`  
+                    }
+                });
+
+                if (!res.ok) {
+                    console.error(`Error al marcar notificación ${id_notificacion} como leída.`);
+                } else {
+                    console.log(`Notificación ${id_notificacion} marcada como leída.`);
+                }
+            } catch (error) {
+                console.error('Error de red al marcar como leída:', error);
+            }
+            // La navegación a la URL en el <a> continuará después de este script
+        }
+        
+        /* ===========================
+        JURAMENTO / NOTIFICACIÓN / LOGOUT
+        =========================== */
+        
+        // Mostrar el modal del juramento
+        document.getElementById('btnAbrirJuramento').addEventListener('click', () => {
+            const modal = new bootstrap.Modal(document.getElementById('modalJuramento'))
+            modal.show()
+        })
+        
+        // Simular llegada de un nuevo mensaje (ejemplo de bolita)
+        setTimeout(() => {
+            // En una implementación real, esto sería una llamada websocket o polling al API de mensajes
+            const dot = document.getElementById('notificacionMensajes')
+            // if (hayNuevosMensajes) dot.style.display = 'block'
+        }, 2500)  
+        
+        function logout() {
+            localStorage.removeItem('ssemi_token')
+            window.location.href = '/' 
+        }
+        
+        /* ===========================
+        EVENT LISTENERS INICIALES
+        =========================== */
+        
+        document.getElementById('viewProfile').addEventListener('click', loadUserProfile)
+        document.getElementById('saveProfile').addEventListener('click', saveProfileChanges)
+        document.getElementById('solicitudBtn').addEventListener('click', toggleCorrectionMode)
+        
+        // NUEVO EVENT LISTENER para el botón en el Topbar
+        document.getElementById('btnRecordatorios').addEventListener('click', loadAndShowRecordatorios)  
+
+        // Verificar token y cargar recordatorios al cargar la página
+        if (!token) {
+            console.warn('No se encontró token.')
+            // window.location.href = "/";  
+        } else {
+            // INICIA LA FUNCIÓN CLAVE DEL REQUISITO RF026 al cargar el dashboard
+            loadAndShowRecordatorios();
+        }
+    </script>
+</body>
+</html>

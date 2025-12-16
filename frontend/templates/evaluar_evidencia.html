@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container mt-4">
+  <h3>Evaluar evidencia: {{ evidencia.titulo }}</h3>
+  <p><b>Descripción:</b> {{ evidencia.descripcion }}</p>
+  <p><b>Archivo:</b> <a href="{{ evidencia.archivos }}" target="_blank">Ver archivo</a></p>
+
+  <form method="POST">
+    <div id="criterios">
+      <div class="criterio mb-3">
+        <label>Criterio:</label>
+        <input type="text" name="criterio" class="form-control" required>
+        <label>Puntaje:</label>
+        <input type="number" step="0.1" name="puntaje" class="form-control" required>
+        <label>Observación:</label>
+        <textarea name="observacion" class="form-control"></textarea>
+      </div>
+    </div>
+    <button type="button" class="btn btn-secondary mt-2" onclick="agregarCriterio()">Agregar criterio</button>
+    <button type="submit" class="btn btn-primary mt-2">Guardar evaluación</button>
+  </form>
+</div>
+
+<script>
+function agregarCriterio() {
+  const div = document.createElement('div');
+  div.classList.add('criterio', 'mb-3');
+  div.innerHTML = `
+    <label>Criterio:</label>
+    <input type="text" name="criterio" class="form-control" required>
+    <label>Puntaje:</label>
+    <input type="number" step="0.1" name="puntaje" class="form-control" required>
+    <label>Observación:</label>
+    <textarea name="observacion" class="form-control"></textarea>
+  `;
+  document.getElementById('criterios').appendChild(div);
+}
+</script>
+{% endblock %}

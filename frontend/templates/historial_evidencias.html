@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Historial de Evidencias - SSEMI</title>
+
+  <!-- ✅ Bootstrap y Fuente -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --ssemi-orange: #ff8533;
+      --ssemi-orange-light: #ff8533;
+      --ssemi-orange-hover: #e67300;
+      --ssemi-gradient: linear-gradient(135deg, #ff8533 0%, #ff8533 100%);
+      --shadow: 0 6px 24px rgba(255, 102, 0, 0.25);
+      --transition: all 0.3s ease;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: radial-gradient(circle at top left, rgba(255, 248, 243, 1) 0%, rgba(255, 230, 210, 0.9) 40%, rgba(255, 200, 160, 0.85) 100%);
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* 🔶 BARRA SUPERIOR */
+    header {
+      background: var(--ssemi-gradient);
+      color: #fff;
+      padding: 18px 32px;
+      font-size: 1.4rem;
+      font-weight: 700;
+      box-shadow: 0 3px 15px rgba(255, 102, 0, 0.3);
+      position: relative;
+      z-index: 10;
+    }
+
+    /* 🔶 CONTENEDOR PRINCIPAL */
+    main {
+      flex: 1;
+      max-width: 1000px;
+      margin: 60px auto;
+      background: #fff;
+      padding: 45px 55px;
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      animation: fadeInUp 0.8s ease;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      color: var(--ssemi-orange);
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 40px;
+      border-bottom: 3px solid var(--ssemi-orange-light);
+      padding-bottom: 10px;
+      display: inline-block;
+      width: 100%;
+    }
+
+    /* 🔶 TABLA */
+    .table thead {
+      background: var(--ssemi-gradient);
+      color: #fff;
+      border: none;
+    }
+
+    .table tbody tr {
+      transition: var(--transition);
+    }
+
+    .table tbody tr:hover {
+      background-color: rgba(255, 133, 51, 0.05);
+      transform: scale(1.01);
+    }
+
+    /* 🔶 BOTONES */
+    .btn-orange {
+      background: var(--ssemi-gradient);
+      color: #fff;
+      font-weight: 600;
+      border: none;
+      transition: var(--transition);
+    }
+
+    .btn-orange:hover {
+      background: var(--ssemi-orange-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(255, 133, 51, 0.3);
+    }
+
+    .btn-edit {
+      background: #0d6efd;
+      color: #fff;
+      font-weight: 600;
+      border: none;
+    }
+
+    .btn-edit:hover {
+      background: #0b5ed7;
+      transform: translateY(-1px);
+    }
+
+    .btn-delete {
+      background: #dc3545;
+      color: #fff;
+      font-weight: 600;
+      border: none;
+    }
+
+    .btn-delete:hover {
+      background: #bb2d3b;
+      transform: translateY(-1px);
+    }
+
+    /* 🔶 MODAL */
+    .modal-header {
+      background: var(--ssemi-gradient);
+      color: #fff;
+      border-bottom: none;
+    }
+
+    .modal-content {
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    /* 🔶 FOOTER */
+    footer {
+      background: var(--ssemi-gradient);
+      color: #fff;
+      text-align: center;
+      padding: 1.2rem 0;
+      font-size: 0.95rem;
+      font-weight: 500;
+      box-shadow: 0 -4px 20px rgba(255, 102, 0, 0.2);
+      margin-top: auto;
+    }
+
+    /* 🔶 RESPONSIVE */
+    @media (max-width: 768px) {
+      main {
+        margin: 30px 15px;
+        padding: 30px 20px;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+
+      header {
+        font-size: 1.2rem;
+        padding: 14px 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 🔶 HEADER -->
+  <header>📚 Historial de Evidencias</header>
+
+  <!-- 🔶 CONTENIDO -->
+  <main>
+    <h2>Registro de Evidencias</h2>
+    <!-- FILTROS - colocar arriba de #contenido -->
+<div id="filtrosHistorial" class="row g-2 mb-3 align-items-end">
+  <div class="col-md-4">
+    <label class="form-label">Título</label>
+    <input id="filtroHistTitulo" type="text" class="form-control" placeholder="Buscar por título...">
+  </div>
+
+  <div class="col-md-4">
+    <label class="form-label">Fecha</label>
+    <input id="filtroHistFecha" type="date" class="form-control">
+  </div>
+
+  <div class="col-md-4">
+    <label class="form-label">Estado</label>
+    <select id="filtroHistEstado" class="form-select">
+      <option value="">Todos</option>
+      <option value="Cargada">Cargada</option>
+      <option value="Borrador">Borrador</option>
+      <option value="Evaluada">Evaluada</option>
+    </select>
+  </div>
+</div>
+
+
+
+    <div id="contenido" class="table-responsive"></div>
+
+    <div class="text-center mt-4">
+      <button id="btnVolver" class="btn btn-orange px-4 py-2 shadow-sm"> Volver</button>
+    </div>
+  </main>
+
+  <!-- 🔶 MODAL -->
+  <div class="modal fade" id="modalEditar" tabindex="-1" aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title fw-bold" id="modalTitle">✏️ Editar Evidencia</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <form id="editarForm">
+            <input type="hidden" id="editId" name="id">
+
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Título</label>
+              <input id="editTitulo" name="titulo" type="text" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Descripción</label>
+              <textarea id="editDescripcion" name="descripcion" rows="3" class="form-control"></textarea>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Categoría</label>
+              <select id="editCategoria" name="id_categoria_fk" class="form-select" required>
+                <option value="1">Evaluación del desempeño</option>
+                <option value="2">Producción teórico-práctica</option>
+                <option value="3">Investigación</option>
+                <option value="4">Organización</option>
+                <option value="5">Otro</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Reemplazar archivo (opcional)</label>
+              <input id="archivos" multiple name="file" type="file" class="form-control" accept=".pdf,.jpg,.jpeg,.png,.docx">
+              <div class="form-text">Si no seleccionas archivo, se mantendrá el actual.</div>
+            </div>
+
+            <div class="text-end">
+              <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-orange">Guardar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🔶 FOOTER -->
+  <footer>© 2025 Sistema SSEMI | Todos los derechos reservados</footer>
+
+  <!-- ✅ Bootstrap -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- ✅ Script original sin cambios -->
+ <script>
+const API_BASE = "http://127.0.0.1:8000";
+
+/* ---------------- Helpers ---------------- */
+function formatDate(raw) {
+  if (!raw) return "N/A";
+  const d = new Date(raw);
+  return isNaN(d) ? raw : d.toLocaleString("es-CO");
+}
+
+function estadoBadge(estado) {
+  const map = {
+    "Cargada": "badge bg-warning text-dark",
+    "Evaluada": "badge bg-success",
+    "Borrador": "badge bg-secondary"
+  };
+  return `<span class="${map[estado] || "badge bg-dark"}">${estado}</span>`;
+}
+
+function renderFiles(files) {
+  if (!files || !files.length)
+    return "<em class='text-muted'>Sin archivos</em>";
+
+  return files
+    .map(f => {
+      if (typeof f === "object" && f !== null) {
+        const url = f.url || f.path || "";
+        const nombre = f.nombre || (url.split("/").pop()) || "archivo";
+        return `<a href="${url}" target="_blank" class="d-block text-primary text-decoration-none">📄 ${nombre}</a>`;
+      } else {
+        const path = String(f).replace(/^\/+/, "");
+        const url = `${API_BASE}/${encodeURI(path)}`;
+        const nombre = path.split("/").pop();
+        return `<a href="${url}" target="_blank" class="d-block text-primary text-decoration-none">📄 ${nombre}</a>`;
+      }
+    })
+    .join("");
+}
+
+/* ---------------- App ---------------- */
+document.addEventListener("DOMContentLoaded", () => {
+  const contenido = document.getElementById("contenido");
+  const editarForm = document.getElementById("editarForm");
+  const modalEditar = new bootstrap.Modal(document.getElementById("modalEditar"));
+  const token = localStorage.getItem("ssemi_token");
+
+  const filtroTitulo = document.getElementById("filtroHistTitulo");
+  const filtroFecha = document.getElementById("filtroHistFecha"); 
+  const filtroEstado = document.getElementById("filtroHistEstado");
+
+  let historialGlobal = [];
+
+  if (!token) {
+    contenido.innerHTML = `
+      <div class="alert alert-warning text-center fs-6">
+        ⚠️ <b>Debes iniciar sesión</b> para ver el historial.
+      </div>`;
+    return;
+  }
+
+  document.getElementById("btnVolver").addEventListener("click", () => window.location.href = "/instructor");
+
+  async function cargarHistorial() {
+    try {
+      const res = await fetch(`${API_BASE}/evidencias/historial`, {
+        headers: { "Authorization": `Bearer ${token}` }
+      });
+
+      if (!res.ok) throw new Error("Error en servidor");
+
+      const data = await res.json();
+      historialGlobal = Array.isArray(data) ? data : [];
+
+      aplicarFiltrosYRender();
+    } catch (err) {
+      console.error(err);
+      contenido.innerHTML = `<div class="alert alert-danger text-center">❌ Error al cargar historial.</div>`;
+    }
+  }
+
+  function aplicarFiltrosYRender() {
+    let items = [...historialGlobal];
+
+    const tituloQ = (filtroTitulo?.value || "").trim().toLowerCase();
+    const fechaQ = filtroFecha?.value || "";
+    const estado = filtroEstado?.value || "";
+
+    if (tituloQ) {
+      items = items.filter(it => (it.titulo || "").toLowerCase().includes(tituloQ));
+    }
+
+    if (estado) {
+      items = items.filter(it => (it.estado || "") === estado);
+    }
+
+    if (fechaQ) {
+      items = items.filter(it => {
+        const itDate = (it.fecha || "").slice(0, 10);
+        return itDate === fechaQ;
+      });
+    }
+
+    renderTabla(items);
+  }
+
+  function renderTabla(items) {
+    if (!items || items.length === 0) {
+      contenido.innerHTML = `<p class="text-center text-muted py-3">⚠️ No hay registros que coincidan.</p>`;
+      return;
+    }
+
+    let html = `
+      <table class="table table-hover align-middle shadow-sm">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Título</th>
+            <th>Archivos</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+      <tbody>`;
+
+    items.forEach(item => {
+      const fecha = formatDate(item.fecha);
+      const estado = item.estado || "Desconocido";
+      const archivosHTML = renderFiles(item.archivos);
+      const bloqueado = estado === "Evaluada";
+
+      html += `
+        <tr>
+          <td>${fecha}</td>
+          <td>${item.titulo || ""}</td>
+          <td>${archivosHTML}</td>
+          <td>${estadoBadge(estado)}</td>
+          <td>
+            <button class="btn btn-sm btn-edit me-1"
+              data-eid="${item.id_evidencia}"
+              data-titulo="${item.titulo || ''}"
+              data-descripcion="${item.descripcion || ''}"
+              ${bloqueado ? 'disabled style="opacity:0.5"' : ''}>✏️</button>
+
+            <button class="btn btn-sm btn-delete"
+              data-eid="${item.id_evidencia}"
+              ${bloqueado ? 'disabled style="opacity:0.5"' : ''}>🗑</button>
+          </td>
+        </tr>`;
+    });
+
+    html += `</tbody></table>`;
+    contenido.innerHTML = html;
+
+    document.querySelectorAll(".btn-delete").forEach(b => b.addEventListener("click", onDeleteClick));
+    document.querySelectorAll(".btn-edit").forEach(b => b.addEventListener("click", onEditClick));
+  }
+
+  async function onDeleteClick(e) {
+    const evidId = e.currentTarget.dataset.eid;
+
+    if (!confirm("¿Seguro que deseas eliminar esta evidencia?")) return;
+
+    const res = await fetch(`${API_BASE}/evidencias/${evidId}`, {
+      method: "DELETE",
+      headers: { "Authorization": `Bearer ${token}` }
+    });
+
+    if (!res.ok) {
+      alert("❌ Error al eliminar");
+      return;
+    }
+
+    await cargarHistorial();
+  }
+
+  function onEditClick(e) {
+    const btn = e.currentTarget;
+
+    document.getElementById("editId").value = btn.dataset.eid;
+    document.getElementById("editTitulo").value = btn.dataset.titulo;
+    document.getElementById("editDescripcion").value = btn.dataset.descripcion;
+
+    modalEditar.show();
+  }
+
+  
+/* -------------------------- 🔥 GUARDAR EDICIÓN (Corregido) -------------------------- */
+editarForm.addEventListener("submit", async ev => {
+  ev.preventDefault();
+
+  const evidId = document.getElementById("editId").value;
+  const formData = new FormData();
+
+  formData.append("titulo", document.getElementById("editTitulo").value);
+  formData.append("descripcion", document.getElementById("editDescripcion").value);
+  formData.append("id_categoria_fk", document.getElementById("editCategoria").value);
+
+  const archivosInput = document.getElementById("archivos");
+
+  if (archivosInput && archivosInput.files.length > 0) {
+    for (let i = 0; i < archivosInput.files.length; i++) {
+      formData.append("files", archivosInput.files[i]); // 🔥 CORREGIDO
+    }
+  }
+
+  const res = await fetch(`${API_BASE}/evidencias/${evidId}`, {
+    method: "PUT",
+    headers: { "Authorization": `Bearer ${token}` },
+    body: formData
+  });
+
+  if (!res.ok) {
+    alert("❌ Error al actualizar");
+    return;
+  }
+
+  modalEditar.hide();
+  await cargarHistorial();
+});
+/* ---------------------------------------------------------------------------------- */
+
+
+  filtroTitulo?.addEventListener("input", aplicarFiltrosYRender);
+  filtroFecha?.addEventListener("change", aplicarFiltrosYRender);
+  filtroEstado?.addEventListener("change", aplicarFiltrosYRender);
+
+  cargarHistorial();
+});
+</script>
+
+
+
+</body>
+</html>
