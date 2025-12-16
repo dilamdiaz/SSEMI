@@ -342,7 +342,7 @@ def listar_evidencias(
             "titulo": e.titulo,
             "descripcion": e.descripcion,
             "fecha": e.fecha_evidencia.isoformat() if e.fecha_evidencia else None,
-            "url": f"http://127.0.0.1:8000/{e.archivos}" if e.archivos else None,
+            "url": f"https://ssemi.onrender.com/{e.archivos}" if e.archivos else None,
             "estado": estado,  # 🔹 valor real de la BD
             "calificado": estado == models.EstadoEvidenciaEnum.Evaluada.value
         })
@@ -442,7 +442,7 @@ def obtener_evidencia_detalle(id_evidencia: int, db: Session = Depends(get_db)):
             if f:
                 archivos_list.append({
                     "nombre": os.path.basename(f).split("_",1)[-1],  # nombre real
-                    "url": f"http://127.0.0.1:8000/" + f.replace("\\","/")  # URL descargable
+                    "url": "https://ssemi.onrender.com/" + f.replace("\\","/")  # URL descargable
                 })
 
     # -------------------------

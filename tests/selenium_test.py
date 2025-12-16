@@ -28,7 +28,7 @@ def init_driver():
 
 def prueba_datos_formulario(driver):
     print("=== Prueba: Datos Correctos e Incorrectos ===")
-    driver.get("http://127.0.0.1:8000/static/subir_evidencias.html")
+    driver.get("https://ssemi.onrender.com/static/subir_evidencias.html")
 
     wait = WebDriverWait(driver, 10)
     wait.until(EC.presence_of_element_located((By.ID, "titulo")))
@@ -59,7 +59,7 @@ def prueba_datos_formulario(driver):
 
 def prueba_pantalla_completa(driver):
     print("=== Prueba: Pantalla Completa ===")
-    driver.get("http://127.0.0.1:8000/")  # Home del proyecto
+    driver.get("https://ssemi.onrender.com/")  # Home del proyecto
 
     wait = WebDriverWait(driver, 10)
     wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
@@ -72,7 +72,7 @@ def prueba_pantalla_completa(driver):
 
 def prueba_espera_cargue(driver):
     print("=== Prueba: Espera de Cargue ===")
-    driver.get("http://127.0.0.1:8000/static/subir_evidencias.html")
+    driver.get("https://ssemi.onrender.com/static/subir_evidencias.html")
 
     wait = WebDriverWait(driver, 10)
     elementos = ["titulo", "descripcion", "categoria", "archivos", "button"]

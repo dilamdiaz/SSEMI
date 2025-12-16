@@ -3,7 +3,7 @@
     // ======================================================
     // CONFIG
     // ======================================================
-    const API_MENSAJES = "http://127.0.0.1:8000/admin/mensajes";
+    const API_MENSAJES = `${API_URL}/admin/mensajes`;
     const getToken = () => localStorage.getItem("ssemi_token");
 
     let bandejaActual = "recibidos";

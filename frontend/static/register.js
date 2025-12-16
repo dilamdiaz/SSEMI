@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const gradoRow = document.getElementById("grado_row");
   const claveRow = document.getElementById("clave_access_row");
 
-  const API_BASE = "http://127.0.0.1:8000";
+  const API_BASE = API_URL;
   const LOGIN_URL = "/login";
 
   function showMessage(msg, isError = true) {

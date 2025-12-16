@@ -1,5 +1,5 @@
 // ---------------- CONFIG ----------------
-const API_BASE = "http://127.0.0.1:8000/mensajes";
+const API_BASE = `${API_URL}/mensajes`;
 const token = localStorage.getItem("ssemi_token");
 
 // ---------------- STATE ----------------

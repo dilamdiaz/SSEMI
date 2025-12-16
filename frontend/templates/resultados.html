@@ -208,7 +208,7 @@ body {
   }
 
   // ====== CARGAR DATOS ======
-  fetch("http://127.0.0.1:8000/instructor/calificaciones", {
+  fetch(`${API_URL}/instructor/calificaciones`, {
     headers: { "Authorization": `Bearer ${token}` }
   })
   .then(r => r.json())
