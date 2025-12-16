@@ -176,14 +176,3 @@ Proyecto de uso académico y educativo.
 
 ---
 
-###  Siguiente paso
-1. Asegúrate de guardar este archivo.
-2. Ejecuta:
-
-```bash
-git add README.md
-git commit -m "Actualiza README con instrucciones completas del proyecto"
-git push
-```
-
-Cuando quieras, seguimos con despliegue, documentación para el profesor o limpieza final del repo.
