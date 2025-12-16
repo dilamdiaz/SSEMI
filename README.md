@@ -1,77 +1,189 @@
+﻿# SSEMI  Sistema de Seguimiento y Evaluación de Méritos de Instructores
 
-# SSEMI — Instrucciones rápidas para desarrolladores
+SSEMI es una aplicación web desarrollada para el **SENA** que permite la **gestión, carga, revisión y evaluación de evidencias** de los instructores en procesos de ascenso y seguimiento institucional.
 
-Breve README orientado al desarrollador que va a levantar el proyecto en su máquina. Aquí encontrarás los comandos mínimos para crear el entorno virtual, instalar dependencias, configurar las variables de entorno y ejecutar el servidor (FastAPI / uvicorn).
+El sistema centraliza las evidencias, automatiza el cálculo de puntajes por criterios y mantiene una **bitácora de acciones**, garantizando trazabilidad, seguridad y transparencia en el proceso de evaluación.
 
-Requisitos previos
-- Python 3.10+ instalado y accesible desde la línea de comandos.
-- MySQL o MariaDB corriendo localmente (o acceso a un servidor MySQL).
+---
 
-# 1 Clona el repositorio (si no lo tienes):
+##  Funcionalidades principales
 
-```powershell
-git clone <tu-repo-url>
-cd C:\Users\Dylam\Desktop\SSEMI_PROYECTO
+- Registro y autenticación de usuarios con JWT
+- Gestión de roles:
+  - Instructor
+  - Evaluador
+  - Administrador
+- Carga y revisión de evidencias
+- Evaluación por criterios y cálculo automático de puntajes
+- Solicitudes de corrección de datos
+- Bitácora de acciones del sistema
+- Notificaciones y seguimiento de estados
+- Control de acceso por rol
+
+---
+
+##  Arquitectura del proyecto
+
+- **Backend**: FastAPI (Python)
+- **Frontend**: HTML5 + Bootstrap 5
+- **Base de datos**: MySQL
+- **Autenticación**: JWT
+- **ORM**: SQLAlchemy
+
+---
+
+##  Estructura del proyecto
+
+```
+SSEMI/
+
+ Backend/
+    app/
+       auth/
+       admin/
+       evaluador/
+       instructor/
+       comite_nacional/
+       evidencias/
+       solicitudes/
+       bitacora/
+       reportes/
+       mensajes/
+       main.py
+    requirements.txt
+    .env (NO versionado)
+
+ frontend/
+    static/
+    |   images/
+    |   archivos .css y .js
+    templates/
+        archivos .html
+ tests/
+
+ README.md
 ```
 
-# 2 Crear y activar entorno virtual (PowerShell)
+---
+
+##  Requisitos previos
+
+- Python 3.10 o superior
+- MySQL o MariaDB
+- Git
+- Navegador web moderno
+
+---
+
+##  Instalación y ejecución (Backend)
+
+### 1 Clonar el repositorio
+
+```bash
+git clone https://github.com/dilamdiaz/SSEMI.git
+cd SSEMI
+```
+
+### 2 Crear y activar entorno virtual (Windows)
+
+Abre PowerShell y ejecuta:
 
 ```powershell
-cd backend
-# Estar dentro de Backend
+cd Backend
 python -m venv venv
-# Ejecuta esto en PowerShell para activar
 venv\Scripts\Activate
-#instalar para scheduler
+```
+
+### 3 Instalar dependencias
+
+```powershell
+pip install --upgrade pip
+pip install -r requirements.txt
 pip install apscheduler
 ```
 
-# 3 Instalar dependencias del backend
+###  Variables de entorno (.env)
 
-```powershell
-pip install -r requirements.txt
-python.exe -m pip install --upgrade pip
-```
+Crea un archivo `.env` dentro de la carpeta `Backend/` con el siguiente contenido mínimo:
 
-# 4 Variables de entorno mínimas (.env)
-
-Coloca un archivo `.env` en la carpeta `Backend/` con al menos lo siguiente:
-
-```text
+```env
 DB_USER=root
 DB_PASSWORD=
 DB_HOST=127.0.0.1
 DB_NAME=ssemi
+
 SECRET_KEY=tu_clave_secreta_segura
 ACCESS_KEY_ADMIN=miclaveespecial123
 ```
 
 Notas:
-- `SECRET_KEY` es obligatorio para JWT. Usa una cadena larga y aleatoria.
-- Si vas a usar envío de correos, mueve las credenciales del archivo `app/auth/email_utils.py` a variables de entorno y asegúrate de no subir `.env` al repo.
+- El archivo `.env` NO debe subirse al repositorio.
+- `SECRET_KEY` es obligatorio para JWT.
+- En producción, todas las credenciales deben manejarse mediante variables de entorno o un gestor de secretos.
 
+###  Ejecutar la aplicación
 
-# 5 Iniciar la aplicación (uvicorn)
-
-Desde la carpeta `Backend/` activa el venv si no está activo y ejecuta:
-
-```powershell
-venv\Scripts\Activate  # si no está activo
-uvicorn app.main:app --reload
-
-```
-
-La app quedará disponible en http://127.0.0.1:8000
-
-Comandos útiles / atajos
-- Para reinstalar dependencias rápidamente:
+Desde la carpeta `Backend/` con el entorno virtual activo:
 
 ```powershell
-pip install -r requirements.txt --upgrade
+uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 ```
 
+La API quedará disponible en:
 
-Notas rápidas de seguridad y desarrollo
-- No subas `.env` ni claves a Git.
-- Reemplaza cualquier credencial hardcodeada en `app/auth/email_utils.py` por variables de entorno.
-- En producción restringe CORS (en `app/main.py` actualmente está `allow_origins=["*"]`).
+```
+http://127.0.0.1:8000
+```
+
+Documentación automática (Swagger):
+
+```
+http://127.0.0.1:8000/docs
+```
+
+---
+
+##  Frontend
+
+El frontend está desarrollado con HTML puro y Bootstrap, sin frameworks como React o Vue.
+
+Para utilizarlo:
+
+1. Inicia el backend.
+2. Abre los archivos `.html` ubicados en la carpeta `frontend/` (por ejemplo `frontend/templates/admin.html`) en tu navegador o sirve las plantillas desde el backend si está configurado.
+3. El frontend consume la API mediante peticiones HTTP (`fetch`).
+
+---
+
+##  Buenas prácticas y seguridad
+
+- No subir archivos `.env` ni credenciales al repositorio.
+- Restringir CORS en producción.
+- No dejar claves o tokens hardcodeados.
+- Usar HTTPS en despliegue.
+
+---
+
+##  Estado del proyecto
+
+-  Proyecto finalizado
+-  Listo para despliegue
+-  Proyecto académico  SENA
+
+##  Licencia
+
+Proyecto de uso académico y educativo.
+
+---
+
+###  Siguiente paso
+1. Asegúrate de guardar este archivo.
+2. Ejecuta:
+
+```bash
+git add README.md
+git commit -m "Actualiza README con instrucciones completas del proyecto"
+git push
+```
+
+Cuando quieras, seguimos con despliegue, documentación para el profesor o limpieza final del repo.
