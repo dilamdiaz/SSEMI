@@ -3,7 +3,8 @@
     // ======================================================
     // CONFIG
     // ======================================================
-    const API_MENSAJES = `${API_URL}/admin/mensajes`;
+    const API_MENSAJES = '/admin/mensajes';
+    if (typeof apiFetch === 'undefined') console.warn('apiFetch not loaded. Ensure /js/api.js is included before this script.');
     const getToken = () => localStorage.getItem("ssemi_token");
 
     let bandejaActual = "recibidos";
@@ -105,13 +106,7 @@
         lista.innerHTML = `<div class="text-center py-3">Cargando mensajes...</div>`;
 
         try {
-            const res = await fetch(`${API_MENSAJES}?bandeja=${bandeja}`, {
-                headers: { "Authorization": `Bearer ${getToken()}` }
-            });
-
-            if (!res.ok) throw new Error("Error al cargar mensajes");
-
-            let mensajes = await res.json();
+            let mensajes = await apiFetch(`${API_MENSAJES}?bandeja=${bandeja}`);
 
             if (mensajes.length === 0) {
                 lista.innerHTML = `<p class="text-center text-muted py-3">No hay mensajes en esta bandeja.</p>`;
@@ -142,13 +137,7 @@
     // ======================================================
     async function verMensaje(id) {
         try {
-            const res = await fetch(`${API_MENSAJES}/${id}`, {
-                headers: { "Authorization": `Bearer ${getToken()}` }
-            });
-
-            if (!res.ok) throw new Error("No se pudo cargar el mensaje");
-
-            const m = await res.json();
+            const m = await apiFetch(`${API_MENSAJES}/${id}`);
             mensajeActual = m;
 
             document.getElementById("modalAsunto").innerText = m.asunto;
@@ -217,20 +206,7 @@
         }
 
         try {
-            const res = await fetch(API_MENSAJES, {
-                method: "POST",
-                headers: {
-                    "Authorization": `Bearer ${getToken()}`,
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(body)
-            });
-
-            if (!res.ok) {
-                const errText = await res.text();
-                mostrarToast("Error al enviar mensaje: " + errText, "danger");
-                throw new Error(errText);
-            }
+            await apiFetch(API_MENSAJES, 'POST', body);
 
             bootstrap.Modal.getInstance(document.getElementById("modalRedactar")).hide();
             cambiarBandeja("enviados");

@@ -1,6 +1,7 @@
 // frontend/static/comite.js
 
 // ------------------- COMITÉ NACIONAL -------------------
+if (typeof apiFetch === 'undefined') console.warn('apiFetch not loaded. Ensure /js/api.js is included before this script.');
 const busquedaComite = document.getElementById("busquedaComite");
 const filtroComiteEstado = document.getElementById("filtroComiteEstado");
 let evaluadoresCache = [];
@@ -12,11 +13,7 @@ filtroComiteEstado.addEventListener("change", mostrarEvaluadoresComite);
 // Función para cargar evaluadores desde la API
 async function cargarEvaluadoresComite() {
     try {
-        const resp = await fetch(`${API_BASE}/comite-nacional/`, {
-            headers: { "Authorization": `Bearer ${token}` }
-        });
-        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-        evaluadoresCache = await resp.json();
+        evaluadoresCache = await apiFetch('/comite-nacional/');
         mostrarEvaluadoresComite();
     } catch (e) {
         console.error("Error al cargar evaluadores:", e);
@@ -66,11 +63,7 @@ function mostrarEvaluadoresComite() {
 // Función para activar evaluador
 async function activarEvaluador(id_usuario) {
     try {
-        const resp = await fetch(`${API_BASE}/comite-nacional/${id_usuario}/activar`, {
-            method: "PUT",
-            headers: { "Authorization": `Bearer ${token}` }
-        });
-        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        await apiFetch(`/comite-nacional/${id_usuario}/activar`, 'PUT');
         alert("✅ Evaluador activado en Comité Nacional");
         cargarEvaluadoresComite();
     } catch (e) {
@@ -82,11 +75,7 @@ async function activarEvaluador(id_usuario) {
 // Función para desactivar evaluador
 async function desactivarEvaluador(id_usuario) {
     try {
-        const resp = await fetch(`${API_BASE}/comite-nacional/${id_usuario}/desactivar`, {
-            method: "PUT",
-            headers: { "Authorization": `Bearer ${token}` }
-        });
-        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        await apiFetch(`/comite-nacional/${id_usuario}/desactivar`, 'PUT');
         alert("✅ Evaluador desactivado en Comité Nacional");
         cargarEvaluadoresComite();
     } catch (e) {

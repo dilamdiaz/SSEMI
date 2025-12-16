@@ -1,4 +1,5 @@
 // Verificar estado de autenticación
+if (typeof apiFetch === 'undefined') console.warn('apiFetch not loaded. Ensure /js/api.js is included before this script.');
 console.log('Verificando sesión activa...');
 
 async function verificarAuth() {
@@ -10,23 +11,9 @@ async function verificarAuth() {
     return false;
   }
 
-  try {
+    try {
     console.log('Verificando permisos de usuario...');
-    const resp = await fetch(`${API_BASE}/auth/me`, {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    });
-
-    if (!resp.ok) {
-      console.log('Error en la verificación de sesión:', resp.status);
-      localStorage.removeItem('ssemi_token');
-      mostrarMensajeError('Su sesión ha expirado, por favor inicie sesión nuevamente');
-      setTimeout(() => window.location.href = '/login', 1500);
-      return false;
-    }
-
-    const user = await resp.json();
+    const user = await apiFetch('/auth/me');
     console.log('Sesión verificada correctamente:', {
       usuario: user.primer_nombre + ' ' + user.primer_apellido,
       rol: user.rol_fk === 1 ? 'Instructor' : user.rol_fk === 2 ? 'Administrador' : 'Evaluador'

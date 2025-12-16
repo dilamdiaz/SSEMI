@@ -1,5 +1,6 @@
 // ---------------- CONFIG ----------------
-const API_BASE = `${API_URL}/mensajes`;
+const API_BASE = '/mensajes';
+if (typeof apiFetch === 'undefined') console.warn('apiFetch not loaded. Ensure /js/api.js is included before this script.');
 const token = localStorage.getItem("ssemi_token");
 
 // ---------------- STATE ----------------
@@ -37,13 +38,7 @@ async function cargarMensajes(tipo) {
         : `${API_BASE}/enviados`;
 
     try {
-        const resp = await fetch(endpoint, {
-            headers: { "Authorization": `Bearer ${token}` }
-        });
-
-        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-
-        mensajesCache = await resp.json();
+        mensajesCache = await apiFetch(endpoint);
 
         if (mensajesCache.length === 0) {
             lista.innerHTML = `
@@ -86,13 +81,7 @@ function crearItemMensaje(m) {
 // ---------------- ABRIR MENSAJE ----------------
 async function abrirMensaje(id) {
     try {
-        const resp = await fetch(`${API_BASE}/${id}`, {
-            headers: { "Authorization": `Bearer ${token}` }
-        });
-
-        if (!resp.ok) throw new Error("Error al abrir mensaje");
-
-        const m = await resp.json();
+        const m = await apiFetch(`${API_BASE}/${id}`);
 
         document.getElementById("modalAsunto").innerText = m.asunto;
         document.getElementById("modalRemitente").innerText = m.remitente_nombre;
@@ -125,20 +114,7 @@ async function enviarMensaje() {
     const payload = { destino_rol: Number(destino_rol), asunto, contenido };
 
     try {
-        const resp = await fetch(API_BASE + "/", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
-            },
-            body: JSON.stringify(payload)
-        });
-
-        if (!resp.ok) {
-            const errorData = await resp.json();
-            alert(errorData.detail || "Error enviando mensaje");
-            return;
-        }
+        await apiFetch(`${API_BASE}/`, 'POST', payload);
 
         // Cerrar modal y limpiar campos
         window.modalRedactar.hide();

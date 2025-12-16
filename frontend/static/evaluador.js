@@ -3,7 +3,8 @@
 
 // ======================================================
 //  CONFIGURACIÓN GENERAL
-// ======================================================
+// =====================================================
+if (typeof apiFetch === 'undefined') console.warn('apiFetch not loaded. Ensure /js/api.js is included before this script.');
 const API_BASE = "/evaluador";
 let evidenciaSeleccionada = null;
 let evaluacionModificada = false;
@@ -31,9 +32,13 @@ async function safeFetch(url, options = {}) {
                 options.headers["Authorization"] = `Bearer ${token}`;
             }
 
-        const res = await fetch(url, options);
-        if (!res.ok) throw new Error(`Error ${res.status}`);
-        return await res.json();
+        const method = options.method || 'GET';
+        let data = null;
+        if (options.body) {
+            try { data = JSON.parse(options.body); } catch { data = options.body; }
+        }
+        const res = await apiFetch(url, method, data);
+        return res;
     } catch (err) {
         console.error(err);
         alert("❌ No se pudo conectar con el servidor.");
@@ -106,9 +111,7 @@ async function abrirEvaluacion(id) {
 // ======================================================
 async function cargarEvidenciaDetalle(id) {
     try {
-        const resp = await fetch(`/evidencias/detalle/${id}`);
-        if (!resp.ok) throw new Error("Evidencia no encontrada");
-        const data = await resp.json();
+        const data = await apiFetch(`/evidencias/detalle/${id}`);
 
         // Limpiar contenedores
         const camposContainer = document.getElementById("camposUsuario");
@@ -166,26 +169,17 @@ document.getElementById("formEvaluacion")?.addEventListener("submit", async e =>
         observacion: observacionVal
     };
 
-    const res = await fetch(`${API_BASE}/evidencia/${evidenciaSeleccionada}`, {
-        method: "POST",
-        body: JSON.stringify(payload),
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-        }
-    });
-
-    if (!res.ok) {
-        const errorText = await res.text();
+    try {
+        const data = await apiFetch(`${API_BASE}/evidencia/${evidenciaSeleccionada}`, 'POST', payload);
+        alert(data.message);
+        mostrarSeccion("panel");
+        cargarEvidencias();
+    } catch (err) {
+        console.error(err);
+        const errorText = (err && (err.detail || err.message)) || JSON.stringify(err);
         alert(`❌ Error al enviar: ${errorText}`);
         return;
     }
-
-    const data = await res.json();
-    alert(data.message);
-
-    mostrarSeccion("panel");
-    cargarEvidencias();
 });
 
 
@@ -206,20 +200,15 @@ async function guardarAvanceParcial() {
         observacion: observacionVal
     };
 
-    const res = await fetch(`${API_BASE}/evidencia/${evidenciaSeleccionada}/parcial`, {
-        method: "POST",
-        body: JSON.stringify(payload),
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-        }
-    });
-
-    if (!res.ok) return alert("❌ Error guardando avance parcial.");
-
-    const data = await res.json();
-    alert(data.message);
-    evaluacionModificada = false;
+    try {
+        const data = await apiFetch(`${API_BASE}/evidencia/${evidenciaSeleccionada}/parcial`, 'POST', payload);
+        alert(data.message);
+        evaluacionModificada = false;
+    } catch (err) {
+        console.error(err);
+        alert("❌ Error guardando avance parcial.");
+        return;
+    }
 }
 
 

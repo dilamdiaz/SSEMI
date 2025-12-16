@@ -1,6 +1,7 @@
 // frontend/static/reportes.js
 (() => {
-  const API_BASE = `${API_URL}/reportes`;
+  const API_BASE = '/reportes';
+  if (typeof apiFetch === 'undefined') console.warn('apiFetch not loaded. Ensure /js/api.js is included before this script.');
   const token = localStorage.getItem("ssemi_token");
 
   if (!token) {
@@ -26,12 +27,7 @@
   // ----------------------
   async function cargarHistorial() {
     try {
-      const res = await fetch(`${API_BASE}/`, {
-        headers: { "Authorization": `Bearer ${token}` }
-      });
-      if (!res.ok) throw new Error("Error cargando historial de reportes");
-
-      const data = await res.json();
+      const data = await apiFetch(`${API_BASE}/`);
       const tbody = document.querySelector("#tablaReportes tbody");
       tbody.innerHTML = "";
 
@@ -98,23 +94,7 @@
     const tipoBackend = tipo.toLowerCase().replace(/\s+/g, "_");
 
     try {
-      const resp = await fetch(`${API_BASE}/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify({ titulo, descripcion: "", tipo_reporte: tipoBackend })
-      });
-
-      if (!resp.ok) {
-        const txt = await resp.text();
-        console.error("Error creando reporte", resp.status, txt);
-        toast("Error creando reporte", "danger");
-        return;
-      }
-
-      const data = await resp.json();
+      await apiFetch(`${API_BASE}/`, 'POST', { titulo, descripcion: "", tipo_reporte: tipoBackend });
       toast("Reporte creado correctamente", "success");
       cargarHistorial();
     } catch (err) {

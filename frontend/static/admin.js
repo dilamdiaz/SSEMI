@@ -1,4 +1,5 @@
 // ------------------- CONFIG -------------------
+if (typeof apiFetch === 'undefined') console.warn('apiFetch not loaded. Ensure /js/api.js is included before this script.');
 const API_BASE = API_URL;
 const token = localStorage.getItem("ssemi_token");
 
@@ -53,9 +54,7 @@ filtroRegional.addEventListener("change", mostrarUsuarios);
 
 async function mostrarUsuarios() {
     try {
-        const resp = await fetch(`${API_BASE}/usuarios`, { headers: { "Authorization": `Bearer ${token}` } });
-        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-        let usuarios = await resp.json();
+        let usuarios = await apiFetch('/usuarios');
 
         const term = busqueda.value.toLowerCase();
         if (term) {
@@ -142,13 +141,7 @@ document.getElementById("guardarCambios").addEventListener("click", async () => 
             regional: document.getElementById("editRegional").value
         };
 
-        const resp = await fetch(`${API_BASE}/usuarios/${usuarioEditarId}`, {
-            method: "PUT",
-            headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
-            body: JSON.stringify(data)
-        });
-
-        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        await apiFetch(`/usuarios/${usuarioEditarId}`, 'PUT', data);
         alert("Usuario actualizado correctamente");
         modalEditar.hide();
         mostrarUsuarios();
@@ -161,12 +154,7 @@ document.getElementById("guardarCambios").addEventListener("click", async () => 
 async function cambiarEstado(id, estadoActual) {
     try {
         const data = { estado: !estadoActual };
-        const resp = await fetch(`${API_BASE}/usuarios/${id}/estado`, {
-            method: "PUT",
-            headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
-            body: JSON.stringify(data)
-        });
-        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        await apiFetch(`/usuarios/${id}/estado`, 'PUT', data);
         mostrarUsuarios();
     } catch (e) {
         console.error("Error al cambiar estado:", e);
@@ -206,9 +194,7 @@ let solicitudesCache = [];
 async function mostrarSolicitudes(){
     try {
         if(solicitudesCache.length === 0){
-            const resp = await fetch(`${API_BASE}/solicitudes-correccion/`, { headers: {"Authorization": `Bearer ${token}`} });
-            if(!resp.ok) throw new Error(`HTTP ${resp.status}`);
-            solicitudesCache = await resp.json();
+            solicitudesCache = await apiFetch('/solicitudes-correccion/');
         }
 
         const term = busquedaSolicitudes.value.toLowerCase();
@@ -282,18 +268,7 @@ document.getElementById("aprobarSolicitud").addEventListener("click", async () =
     }
 
     try {
-        const resp = await fetch(`${API_BASE}/solicitudes-correccion/${solicitudSeleccionadaId}/aprobar`, {
-            method: "PUT",
-            headers: {
-                "Authorization": `Bearer ${token}`,
-                "Content-Type": "application/json"
-            }
-        });
-
-        if (!resp.ok) {
-            const errorData = await resp.json();
-            throw new Error(errorData.detail || `HTTP ${resp.status}`);
-        }
+        await apiFetch(`/solicitudes-correccion/${solicitudSeleccionadaId}/aprobar`, 'PUT');
 
         alert("✅ Solicitud aprobada correctamente");
         modalSolicitudBootstrap.hide();
@@ -320,12 +295,7 @@ document.getElementById("confirmarRechazo").addEventListener("click", async ()=>
     if(!motivo){ alert("Debe ingresar un motivo de rechazo"); return; }
 
     try{
-        const resp = await fetch(`${API_BASE}/solicitudes-correccion/${solicitudSeleccionadaId}/rechazar`, {
-            method:"PUT",
-            headers: {"Authorization": `Bearer ${token}`, "Content-Type":"application/json"},
-            body: JSON.stringify({motivo_respuesta: motivo})
-        });
-        if(!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        await apiFetch(`/solicitudes-correccion/${solicitudSeleccionadaId}/rechazar`, 'PUT', { motivo_respuesta: motivo });
         alert("Solicitud rechazada");
         modalRechazoBootstrap.hide();
         document.getElementById("motivoRechazo").value = '';
@@ -340,11 +310,7 @@ document.getElementById("confirmarRechazo").addEventListener("click", async ()=>
 // ------------------- PERFIL ADMIN -------------------
 document.getElementById("btnPerfil").addEventListener("click", async () => {
     try {
-        const resp = await fetch(`${API_BASE}/me`, {
-            headers: { "Authorization": `Bearer ${token}` }
-        });
-        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-        const data = await resp.json();
+        const data = await apiFetch('/me');
 
         // Guardamos el ID del usuario para la actualización
         usuarioEditarId = data.id_usuario;
@@ -391,16 +357,7 @@ document.getElementById("guardarPerfil").addEventListener("click", async () => {
             regional: document.getElementById("perfilRegional").value
         };
 
-        const resp = await fetch(`${API_BASE}/usuarios/${usuarioEditarId}`, {
-            method: "PUT",
-            headers: { 
-                "Authorization": `Bearer ${token}`, 
-                "Content-Type": "application/json" 
-            },
-            body: JSON.stringify(data)
-        });
-
-        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        await apiFetch(`/usuarios/${usuarioEditarId}`, 'PUT', data);
         alert("Perfil actualizado correctamente");
         modalPerfil.hide();
         mostrarUsuarios();
@@ -423,9 +380,7 @@ document.getElementById("btnRefrescarBitacora")?.addEventListener("click", mostr
 async function mostrarBitacora(){
     if(!bitacoraSection) return;
     try{
-        const resp = await fetch(`${API_BASE}/bitacora/`, { headers: { "Authorization": `Bearer ${token}` } });
-        if(!resp.ok) throw new Error(`HTTP ${resp.status}`);
-        const rows = await resp.json();
+        const rows = await apiFetch('/bitacora/');
         const tbody = document.querySelector("#bitacoraTable tbody");
         tbody.innerHTML = "";
         rows.forEach(r=>{

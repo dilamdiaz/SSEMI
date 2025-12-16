@@ -1,4 +1,5 @@
 const API_BASE = API_URL;
+if (typeof apiFetch === 'undefined') console.warn('apiFetch not loaded. Ensure /js/api.js is included before this script.');
 
 /* ========= UTILIDADES ========= */
 function onlySoySena(email) { return /@soy\.sena\.edu\.co$/i.test(email); }
@@ -101,27 +102,20 @@ document.addEventListener("DOMContentLoaded", () => {
     async function verify2FACode(correo, codigo) {
       showLoading();
       try {
-        const resp = await fetch(`${API_BASE}/2fa/verify`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ correo, codigo })
-        });
-
-        const data = await resp.json().catch(() => null);
-        hideLoading();
-
-        if (!resp.ok) {
-          showMessage(message2FA, `❌ ${parseError(data)}`, true);
+        try {
+          const data = await apiFetch('/2fa/verify', 'POST', { correo, codigo });
+          hideLoading();
+          if (data?.access_token) {
+            localStorage.setItem("ssemi_token", data.access_token);
+            localStorage.setItem("user_role", String(data.rol ?? ""));
+            localStorage.setItem("user_id", String(data.user_id ?? ""));
+          }
+          return data;
+        } catch (err) {
+          hideLoading();
+          showMessage(message2FA, `❌ ${parseError(err)}`, true);
           return null;
         }
-
-        if (data?.access_token) {
-          localStorage.setItem("ssemi_token", data.access_token);
-          localStorage.setItem("user_role", String(data.rol ?? ""));
-          localStorage.setItem("user_id", String(data.user_id ?? ""));
-        }
-
-        return data;
 
       } catch {
         hideLoading();
@@ -172,34 +166,29 @@ document.addEventListener("DOMContentLoaded", () => {
         showLoading();
 
         try {
-          const resp = await fetch(`${API_BASE}/login`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ correo, contraseña })
-          });
+          try {
+            const data = await apiFetch('/login', 'POST', { correo, contraseña });
+            hideLoading();
+            setSubmitDisabled(loginForm, false);
 
-          const data = await resp.json().catch(() => null);
-          hideLoading();
-          setSubmitDisabled(loginForm, false);
+            pendingCorreo = correo;
 
-          if (!resp.ok) {
-            showMessage(msgEl, `❌ ${parseError(data)}`, true);
-            return;
+            if (data?.access_token) {
+              localStorage.setItem("ssemi_token", data.access_token);
+              localStorage.setItem("user_role", String(data.rol ?? ""));
+              localStorage.setItem("user_id", String(data.user_id ?? ""));
+              showMessage(msgEl, "Iniciando...", false);
+              return setTimeout(() => redirectByRole(), 500);
+            }
+
+            input2FA.value = "";
+            modal2FA?.show();
+            removeResidualBackdrop();
+          } catch (err) {
+            hideLoading();
+            setSubmitDisabled(loginForm, false);
+            showMessage(msgEl, `❌ ${parseError(err)}`);
           }
-
-          pendingCorreo = correo;
-
-          if (data?.access_token) {
-            localStorage.setItem("ssemi_token", data.access_token);
-            localStorage.setItem("user_role", String(data.rol ?? ""));
-            localStorage.setItem("user_id", String(data.user_id ?? ""));
-            showMessage(msgEl, "Iniciando...", false);
-            return setTimeout(() => redirectByRole(), 500);
-          }
-
-          input2FA.value = "";
-          modal2FA?.show();
-          removeResidualBackdrop();
 
         } catch {
           hideLoading();
@@ -250,21 +239,11 @@ async function registerUser(form) {
     clave_acceso: form.querySelector("#claveAcceso")?.value
   };
 
-  try {
-    const resp = await fetch(`${API_BASE}/register`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data)
-    });
-
-    const out = await resp.json().catch(() => null);
-
-    if (!resp.ok) return showMessage(msgEl, `❌ ${parseError(out)}`, true);
-
-    showMessage(msgEl, "Registro exitoso, redirigiendo...", false);
-    setTimeout(() => location.href = "/login", 1200);
-
-  } catch {
-    showMessage(msgEl, "❌ Error al conectar", true);
-  }
+    try {
+      const out = await apiFetch('/register', 'POST', data);
+      showMessage(msgEl, "Registro exitoso, redirigiendo...", false);
+      setTimeout(() => location.href = "/login", 1200);
+    } catch (err) {
+      showMessage(msgEl, `❌ ${parseError(err)}`, true);
+    }
 }

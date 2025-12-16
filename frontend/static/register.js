@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const claveRow = document.getElementById("clave_access_row");
 
   const API_BASE = API_URL;
+  if (typeof apiFetch === 'undefined') console.warn('apiFetch not loaded. Ensure /js/api.js is included before this script.');
   const LOGIN_URL = "/login";
 
   function showMessage(msg, isError = true) {
@@ -94,22 +95,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     try {
-      const resp = await fetch(`${API_BASE}/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-      });
-
-      const result = await resp.json();
-
-      if (!resp.ok) {
-        const detail = Array.isArray(result.detail)
-          ? result.detail.map(d => d.msg || d.message).join(", ")
-          : result.detail || result.message || "Error al registrar";
-        showMessage(`❌ ${detail}`);
-        return;
-      }
-
+      const result = await apiFetch('/register', 'POST', data);
       showMessage("✅ Usuario registrado correctamente", false);
       form.reset();
 
