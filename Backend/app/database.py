@@ -6,16 +6,15 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-DATABASE_URL = os.getenv("MYSQL_URL")
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 if not DATABASE_URL:
-    raise ValueError("MYSQL_URL no está definida")
+    raise RuntimeError("DATABASE_URL no está definida")
 
-# 🔑 fuerza uso de PyMySQL
-if DATABASE_URL.startswith("mysql://"):
-    DATABASE_URL = DATABASE_URL.replace(
-        "mysql://", "mysql+pymysql://", 1
-    )
+# Fuerza PyMySQL
+DATABASE_URL = DATABASE_URL.replace(
+    "mysql://", "mysql+pymysql://", 1
+)
 
 engine = create_engine(
     DATABASE_URL,
