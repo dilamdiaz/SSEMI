@@ -13,3 +13,4 @@ jinja2
 reportlab 
 openpyxl
 apscheduler
+psycopg2-binary

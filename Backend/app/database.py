@@ -1,28 +1,15 @@
 # database.py
 import os
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
-from dotenv import load_dotenv
+from sqlalchemy.orm import sessionmaker, declarative_base
 
-load_dotenv()
+DATABASE_URL = os.getenv("MYSQL_URL")
 
-DB_USER = os.getenv("DB_USER")
-DB_PASSWORD = os.getenv("DB_PASSWORD")
-DB_HOST = os.getenv("DB_HOST")
-DB_PORT = os.getenv("DB_PORT", "11089")
-DB_NAME = os.getenv("DB_NAME")
-
-# ✅ SSL Aiven (sin verificación de CA)
-SQLALCHEMY_DATABASE_URL = (
-    f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}"
-    f"@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-    "?ssl_disabled=false"
-    "&ssl_verify_cert=false"
-)
+if not DATABASE_URL:
+    raise RuntimeError("MYSQL_URL no está configurada")
 
 engine = create_engine(
-    SQLALCHEMY_DATABASE_URL,
+    DATABASE_URL,
     pool_pre_ping=True,
     future=True
 )
