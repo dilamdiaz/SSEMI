@@ -127,4 +127,4 @@ class TwoFactorVerify(BaseModel):
 
 class TwoFactorResponse(BaseModel):
     mensaje: str
-    codigo: str = None  # Solo presente en debug mode
+    codigo: Optional[str] = None  # Solo presente en debug mode
