@@ -6,10 +6,10 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-DATABASE_URL = os.getenv("DATABASE_URL")
+DATABASE_URL = os.getenv("DATABASE_URL") or os.getenv("MYSQL_URL")
 
 if not DATABASE_URL:
-    raise RuntimeError("DATABASE_URL no está definida")
+    raise RuntimeError("DATABASE_URL no está definida. Define DATABASE_URL (o MYSQL_URL) en las variables de entorno")
 
 # Fuerza PyMySQL
 DATABASE_URL = DATABASE_URL.replace(

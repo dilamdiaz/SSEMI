@@ -1,11 +1,20 @@
 # email_utils.py
+import os
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from dotenv import load_dotenv
+
+load_dotenv()
 
 def send_email(destinatario: str, subject: str, body: str):
-    remitente = "ssemicompany@gmail.com"
-    clave = "vvum tamq hror lkoj"  # <-- ejemplo: sin espacios (pon aquí TU app password real sin espacios)
+    remitente = os.getenv("EMAIL_USER")
+    clave = os.getenv("EMAIL_PASSWORD")
+    smtp_host = os.getenv("SMTP_HOST", "smtp.gmail.com")
+    smtp_port = int(os.getenv("SMTP_PORT", 587))
+
+    if not remitente or not clave:
+        raise RuntimeError("EMAIL_USER and EMAIL_PASSWORD must be set in environment to send emails")
 
     msg = MIMEMultipart()
     msg["From"] = remitente
@@ -14,10 +23,11 @@ def send_email(destinatario: str, subject: str, body: str):
     msg.attach(MIMEText(body, "html"))
 
     try:
-        with smtplib.SMTP("smtp.gmail.com", 587) as server:
+        with smtplib.SMTP(smtp_host, smtp_port) as server:
             server.ehlo()
-            server.starttls()
-            server.ehlo()
+            if smtp_port == 587:
+                server.starttls()
+                server.ehlo()
             server.login(remitente, clave)
             server.sendmail(remitente, destinatario, msg.as_string())
         print("✅ Correo enviado correctamente")
