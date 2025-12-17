@@ -120,7 +120,14 @@ def login_send_2fa(request: LoginRequest, db: Session = Depends(get_db)):
         if allow_debug:
             return {"mensaje": "Código de verificación (debug)", "codigo": codigo}
         else:
-            raise HTTPException(status_code=503, detail="No se pudo enviar el código de verificación. Contacta al administrador.")
+            raise HTTPException(
+                status_code=503,
+                detail=(
+                    "No se pudo enviar el código de verificación. "
+                    "Acciones: configura EMAIL_USER and EMAIL_PASSWORD en las variables de entorno, "
+                    "o para pruebas temporales activa ALLOW_2FA_CODE_IN_RESPONSE=true."
+                )
+            )
 
     return {"mensaje": "Código de verificación enviado correctamente"}
 
