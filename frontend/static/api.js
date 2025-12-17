@@ -1,6 +1,9 @@
 // api.js (GLOBAL)
 
-window.API_URL = "https://ssemi.onrender.com";
+// API_URL can be defined in config.js or here as fallback
+if (typeof window.API_URL === 'undefined') {
+  window.API_URL = "https://ssemi.onrender.com";
+}
 
 window.apiFetch = async function (endpoint, method = "GET", data = null) {
   const token = localStorage.getItem("ssemi_token");
@@ -18,7 +21,7 @@ window.apiFetch = async function (endpoint, method = "GET", data = null) {
     options.body = JSON.stringify(data);
   }
 
-  const url = endpoint.startsWith("http") ? endpoint : (API_URL + endpoint);
+  const url = endpoint.startsWith("http") ? endpoint : (window.API_URL + endpoint);
 
   const response = await fetch(url, options);
 
