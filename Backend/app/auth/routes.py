@@ -82,42 +82,49 @@ def register_user(user: UserCreate, db: Session = Depends(get_db)):
 # =================================================================
 @router.post("/login", response_model=TwoFactorResponse)
 def login_send_2fa(request: LoginRequest, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
-    user = db.query(Usuario).filter(Usuario.correo == request.correo).first()
-    if not user or not verify_password(request.contraseña, user.contraseña):
-        raise HTTPException(status_code=401, detail="Credenciales incorrectas")
-
-    if not user.estado:
-        raise HTTPException(status_code=403, detail="Cuenta Desactivada. Contacte al Administrador.")
-
-    # Generar código 2FA de 6 dígitos
-    codigo = f"{secrets.randbelow(1000000):06d}"
-    user.two_factor_code = codigo
-    user.two_factor_expiration = datetime.utcnow() + timedelta(minutes=5)
-
-    db.commit()
-    db.refresh(user)
-
-    # Enviar correo con código
-    subject = "Código de verificación SSEMI"
-    body = f"""
-    <p>Hola {user.primer_nombre},</p>
-    <p>Tu código de verificación es: <b>{codigo}</b></p>
-    <p>Este código expirará en 5 minutos.</p>
-    """
-    # Enviar el correo en background para evitar bloquear la petición
     try:
-        background_tasks.add_task(send_email, user.correo, subject, body)
-    except Exception:
-        # Si la programación del background task falla, no bloqueamos el login
-        print("⚠️  No se pudo programar background task de email")
+        user = db.query(Usuario).filter(Usuario.correo == request.correo).first()
+        if not user or not verify_password(request.contraseña, user.contraseña):
+            raise HTTPException(status_code=401, detail="Credenciales incorrectas")
 
-    # Si está permitido para debug, devolver el código en la respuesta (solo para pruebas)
-    from os import getenv
-    allow_debug = getenv("ALLOW_2FA_CODE_IN_RESPONSE", "false").lower() == "true"
-    if allow_debug:
-        return {"mensaje": "Código de verificación (debug)", "codigo": codigo}
+        if not user.estado:
+            raise HTTPException(status_code=403, detail="Cuenta Desactivada. Contacte al Administrador.")
 
-    return {"mensaje": "Código de verificación enviado correctamente"}
+        # Generar código 2FA de 6 dígitos
+        codigo = f"{secrets.randbelow(1000000):06d}"
+        user.two_factor_code = codigo
+        user.two_factor_expiration = datetime.utcnow() + timedelta(minutes=5)
+
+        db.commit()
+        db.refresh(user)
+
+        # Enviar correo con código
+        subject = "Código de verificación SSEMI"
+        body = f"""
+        <p>Hola {user.primer_nombre},</p>
+        <p>Tu código de verificación es: <b>{codigo}</b></p>
+        <p>Este código expirará en 5 minutos.</p>
+        """
+        # Enviar el correo en background para evitar bloquear la petición
+        try:
+            background_tasks.add_task(send_email, user.correo, subject, body)
+        except Exception as e:
+            print(f"⚠️ No se pudo programar background task de email: {e}")
+
+        # Si está permitido para debug, devolver el código en la respuesta (solo para pruebas)
+        from os import getenv
+        allow_debug = getenv("ALLOW_2FA_CODE_IN_RESPONSE", "false").lower() == "true"
+        if allow_debug:
+            return {"mensaje": "Código de verificación (debug)", "codigo": codigo}
+
+        return {"mensaje": "Código de verificación enviado correctamente"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"❌ Error no capturado en /login: {e}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"Error interno: {str(e)}")
 
 # =================================================================
 # -------------------- Endpoint: Verificar 2FA --------------------
