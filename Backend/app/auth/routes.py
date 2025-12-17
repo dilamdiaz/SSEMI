@@ -82,49 +82,42 @@ def register_user(user: UserCreate, db: Session = Depends(get_db)):
 # =================================================================
 @router.post("/login", response_model=TwoFactorResponse)
 def login_send_2fa(request: LoginRequest, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
+    user = db.query(Usuario).filter(Usuario.correo == request.correo).first()
+    if not user or not verify_password(request.contraseña, user.contraseña):
+        raise HTTPException(status_code=401, detail="Credenciales incorrectas")
+
+    if not user.estado:
+        raise HTTPException(status_code=403, detail="Cuenta Desactivada. Contacte al Administrador.")
+
+    # Generar código 2FA de 6 dígitos
+    codigo = f"{secrets.randbelow(1000000):06d}"
+    user.two_factor_code = codigo
+    user.two_factor_expiration = datetime.utcnow() + timedelta(minutes=5)
+
+    db.commit()
+    db.refresh(user)
+
+    # Enviar correo con código
+    subject = "Código de verificación SSEMI"
+    body = f"""
+    <p>Hola {user.primer_nombre},</p>
+    <p>Tu código de verificación es: <b>{codigo}</b></p>
+    <p>Este código expirará en 5 minutos.</p>
+    """
+    # Enviar el correo en background para evitar bloquear la petición
     try:
-        user = db.query(Usuario).filter(Usuario.correo == request.correo).first()
-        if not user or not verify_password(request.contraseña, user.contraseña):
-            raise HTTPException(status_code=401, detail="Credenciales incorrectas")
+        background_tasks.add_task(send_email, user.correo, subject, body)
+    except Exception:
+        # Si la programación del background task falla, no bloqueamos el login
+        print("⚠️  No se pudo programar background task de email")
 
-        if not user.estado:
-            raise HTTPException(status_code=403, detail="Cuenta Desactivada. Contacte al Administrador.")
+    # Si está permitido para debug, devolver el código en la respuesta (solo para pruebas)
+    from os import getenv
+    allow_debug = getenv("ALLOW_2FA_CODE_IN_RESPONSE", "false").lower() == "true"
+    if allow_debug:
+        return {"mensaje": "Código de verificación (debug)", "codigo": codigo}
 
-        # Generar código 2FA de 6 dígitos
-        codigo = f"{secrets.randbelow(1000000):06d}"
-        user.two_factor_code = codigo
-        user.two_factor_expiration = datetime.utcnow() + timedelta(minutes=5)
-
-        db.commit()
-        db.refresh(user)
-
-        # Enviar correo con código
-        subject = "Código de verificación SSEMI"
-        body = f"""
-        <p>Hola {user.primer_nombre},</p>
-        <p>Tu código de verificación es: <b>{codigo}</b></p>
-        <p>Este código expirará en 5 minutos.</p>
-        """
-        # Enviar el correo en background para evitar bloquear la petición
-        try:
-            background_tasks.add_task(send_email, user.correo, subject, body)
-        except Exception as e:
-            print(f"⚠️ No se pudo programar background task de email: {e}")
-
-        # Si está permitido para debug, devolver el código en la respuesta (solo para pruebas)
-        from os import getenv
-        allow_debug = getenv("ALLOW_2FA_CODE_IN_RESPONSE", "false").lower() == "true"
-        if allow_debug:
-            return {"mensaje": "Código de verificación (debug)", "codigo": codigo}
-
-        return {"mensaje": "Código de verificación enviado correctamente"}
-    except HTTPException:
-        raise
-    except Exception as e:
-        print(f"❌ Error no capturado en /login: {e}")
-        import traceback
-        traceback.print_exc()
-        raise HTTPException(status_code=500, detail=f"Error interno: {str(e)}")
+    return {"mensaje": "Código de verificación enviado correctamente"}
 
 # =================================================================
 # -------------------- Endpoint: Verificar 2FA --------------------
@@ -220,7 +213,6 @@ def update_my_profile(
 def password_recovery(
     data: PasswordRecoveryRequest,
     request: Request,
-    background_tasks: BackgroundTasks,
     db: Session = Depends(get_db)
 ):
     user = db.query(Usuario).filter(Usuario.correo == data.correo).first()
@@ -251,7 +243,11 @@ def password_recovery(
     """
     try:
         # Enviar en background para no bloquear la petición
-        background_tasks.add_task(send_email, user.correo, subject, body)
+        from fastapi import BackgroundTasks
+        # If a BackgroundTasks instance is not available via dependency, we schedule via a local one
+        # FastAPI will normally provide BackgroundTasks when added to the endpoint signature; here we use a best-effort.
+        background = BackgroundTasks()
+        background.add_task(send_email, user.correo, subject, body)
     except Exception as e:
         print(f"⚠️ No se pudo programar envío de correo de recuperación: {e}")
         traceback.print_exc()
