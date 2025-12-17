@@ -1,6 +1,6 @@
 # Backend/app/comite_nacional/routes.py
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
 from sqlalchemy.orm import Session
 from typing import List
 from app.database import get_db
@@ -32,6 +32,7 @@ def listar_evaluadores_comite(db: Session = Depends(get_db),
 # -------------------------------
 @router.put("/{id_usuario}/activar")
 def activar_evaluador_comite(id_usuario: int,
+                             background_tasks: BackgroundTasks,
                              db: Session = Depends(get_db),
                              current_user: Usuario = Depends(get_current_user)):
     if current_user.rol_fk != 2:
@@ -70,9 +71,9 @@ def activar_evaluador_comite(id_usuario: int,
     <p>Equipo SSEMI</p>
     """
     try:
-        send_email(evaluador.correo, subject, body)
+        background_tasks.add_task(send_email, evaluador.correo, subject, body)
     except Exception as e:
-        print(f"❌ Error al enviar correo de activación: {e}")
+        print(f"⚠️ No se pudo programar envío de correo de activación: {e}")
 
     return {"message": f"{evaluador.primer_nombre} {evaluador.primer_apellido} activado en Comité Nacional"}
 
@@ -81,6 +82,7 @@ def activar_evaluador_comite(id_usuario: int,
 # -------------------------------
 @router.put("/{id_usuario}/desactivar")
 def desactivar_evaluador_comite(id_usuario: int,
+                                background_tasks: BackgroundTasks,
                                 db: Session = Depends(get_db),
                                 current_user: Usuario = Depends(get_current_user)):
     if current_user.rol_fk != 2:
@@ -106,8 +108,8 @@ def desactivar_evaluador_comite(id_usuario: int,
     <p>Equipo SSEMI</p>
     """
     try:
-        send_email(evaluador.correo, subject, body)
+        background_tasks.add_task(send_email, evaluador.correo, subject, body)
     except Exception as e:
-        print(f"❌ Error al enviar correo de desactivación: {e}")
+        print(f"⚠️ No se pudo programar envío de correo de desactivación: {e}")
 
     return {"message": f"{evaluador.primer_nombre} {evaluador.primer_apellido} desactivado en Comité Nacional"}

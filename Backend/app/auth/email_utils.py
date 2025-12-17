@@ -15,6 +15,7 @@ def send_email(destinatario: str, subject: str, body: str):
     clave = os.getenv("EMAIL_PASSWORD")
     smtp_host = os.getenv("SMTP_HOST", "smtp.gmail.com")
     smtp_port = int(os.getenv("SMTP_PORT", 587))
+    smtp_timeout = int(os.getenv("SMTP_TIMEOUT", 10))
 
     if not remitente or not clave:
         print("⚠️  EMAIL_USER/EMAIL_PASSWORD not set. Skipping email send.")
@@ -27,7 +28,7 @@ def send_email(destinatario: str, subject: str, body: str):
     msg.attach(MIMEText(body, "html"))
 
     try:
-        with smtplib.SMTP(smtp_host, smtp_port) as server:
+        with smtplib.SMTP(smtp_host, smtp_port, timeout=smtp_timeout) as server:
             server.ehlo()
             if smtp_port == 587:
                 server.starttls()

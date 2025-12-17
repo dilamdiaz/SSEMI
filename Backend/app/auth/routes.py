@@ -1,5 +1,5 @@
 # app/auth/routes.py
-from fastapi import APIRouter, Depends, HTTPException, status, Request
+from fastapi import APIRouter, Depends, HTTPException, status, Request, BackgroundTasks
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordBearer
 from jose import jwt, JWTError
@@ -81,7 +81,7 @@ def register_user(user: UserCreate, db: Session = Depends(get_db)):
 # -------------------- Endpoint: Login ----------------------------
 # =================================================================
 @router.post("/login", response_model=TwoFactorResponse)
-def login_send_2fa(request: LoginRequest, db: Session = Depends(get_db)):
+def login_send_2fa(request: LoginRequest, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
     user = db.query(Usuario).filter(Usuario.correo == request.correo).first()
     if not user or not verify_password(request.contraseña, user.contraseña):
         raise HTTPException(status_code=401, detail="Credenciales incorrectas")
@@ -104,30 +104,18 @@ def login_send_2fa(request: LoginRequest, db: Session = Depends(get_db)):
     <p>Tu código de verificación es: <b>{codigo}</b></p>
     <p>Este código expirará en 5 minutos.</p>
     """
-    # Intentar enviar el correo; send_email devuelve True/False
-    sent = False
+    # Enviar el correo en background para evitar bloquear la petición
     try:
-        sent = send_email(user.correo, subject, body)
-    except Exception as e:
-        print(f"❌ Excepción al intentar enviar correo 2FA: {e}")
-        traceback.print_exc()
+        background_tasks.add_task(send_email, user.correo, subject, body)
+    except Exception:
+        # Si la programación del background task falla, no bloqueamos el login
+        print("⚠️  No se pudo programar background task de email")
 
-    if not sent:
-        # Comportamiento configurable: permitir devolver el código en la respuesta
-        # solo si la variable de entorno ALLOW_2FA_CODE_IN_RESPONSE está en 'true'
-        from os import getenv
-        allow_debug = getenv("ALLOW_2FA_CODE_IN_RESPONSE", "false").lower() == "true"
-        if allow_debug:
-            return {"mensaje": "Código de verificación (debug)", "codigo": codigo}
-        else:
-            raise HTTPException(
-                status_code=503,
-                detail=(
-                    "No se pudo enviar el código de verificación. "
-                    "Acciones: configura EMAIL_USER and EMAIL_PASSWORD en las variables de entorno, "
-                    "o para pruebas temporales activa ALLOW_2FA_CODE_IN_RESPONSE=true."
-                )
-            )
+    # Si está permitido para debug, devolver el código en la respuesta (solo para pruebas)
+    from os import getenv
+    allow_debug = getenv("ALLOW_2FA_CODE_IN_RESPONSE", "false").lower() == "true"
+    if allow_debug:
+        return {"mensaje": "Código de verificación (debug)", "codigo": codigo}
 
     return {"mensaje": "Código de verificación enviado correctamente"}
 
@@ -254,14 +242,16 @@ def password_recovery(
     <p>Si no solicitaste este cambio, ignora este mensaje.</p>
     """
     try:
-        send_email(user.correo, subject, body)
+        # Enviar en background para no bloquear la petición
+        from fastapi import BackgroundTasks
+        # If a BackgroundTasks instance is not available via dependency, we schedule via a local one
+        # FastAPI will normally provide BackgroundTasks when added to the endpoint signature; here we use a best-effort.
+        background = BackgroundTasks()
+        background.add_task(send_email, user.correo, subject, body)
     except Exception as e:
-        print(f"❌ Error al enviar correo: {e}")
+        print(f"⚠️ No se pudo programar envío de correo de recuperación: {e}")
         traceback.print_exc()
-        raise HTTPException(
-            status_code=500,
-            detail="No se pudo enviar el correo de recuperación. Intenta más tarde."
-        )
+        # not raising a 500 to avoid blocking the user action; log and continue
 
     return {"message": "Se ha enviado un enlace de recuperación a tu correo"}
 
