@@ -14,7 +14,8 @@ def send_email(destinatario: str, subject: str, body: str):
     smtp_port = int(os.getenv("SMTP_PORT", 587))
 
     if not remitente or not clave:
-        raise RuntimeError("EMAIL_USER and EMAIL_PASSWORD must be set in environment to send emails")
+        print("⚠️  EMAIL_USER/EMAIL_PASSWORD not set. Skipping email send.")
+        return False
 
     msg = MIMEMultipart()
     msg["From"] = remitente
@@ -31,6 +32,7 @@ def send_email(destinatario: str, subject: str, body: str):
             server.login(remitente, clave)
             server.sendmail(remitente, destinatario, msg.as_string())
         print("✅ Correo enviado correctamente")
+        return True
     except Exception as e:
         print(f"❌ Error al enviar correo: {e}")
-        raise
+        return False

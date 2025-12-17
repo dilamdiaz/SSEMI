@@ -104,12 +104,23 @@ def login_send_2fa(request: LoginRequest, db: Session = Depends(get_db)):
     <p>Tu código de verificación es: <b>{codigo}</b></p>
     <p>Este código expirará en 5 minutos.</p>
     """
+    # Intentar enviar el correo; send_email devuelve True/False
+    sent = False
     try:
-        send_email(user.correo, subject, body)
+        sent = send_email(user.correo, subject, body)
     except Exception as e:
-        print(f"❌ Error al enviar correo 2FA: {e}")
+        print(f"❌ Excepción al intentar enviar correo 2FA: {e}")
         traceback.print_exc()
-        raise HTTPException(status_code=500, detail="No se pudo enviar el código de verificación")
+
+    if not sent:
+        # Comportamiento configurable: permitir devolver el código en la respuesta
+        # solo si la variable de entorno ALLOW_2FA_CODE_IN_RESPONSE está en 'true'
+        from os import getenv
+        allow_debug = getenv("ALLOW_2FA_CODE_IN_RESPONSE", "false").lower() == "true"
+        if allow_debug:
+            return {"mensaje": "Código de verificación (debug)", "codigo": codigo}
+        else:
+            raise HTTPException(status_code=503, detail="No se pudo enviar el código de verificación. Contacta al administrador.")
 
     return {"mensaje": "Código de verificación enviado correctamente"}
 
