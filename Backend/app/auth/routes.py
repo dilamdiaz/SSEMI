@@ -213,6 +213,7 @@ def update_my_profile(
 def password_recovery(
     data: PasswordRecoveryRequest,
     request: Request,
+    background_tasks: BackgroundTasks,
     db: Session = Depends(get_db)
 ):
     user = db.query(Usuario).filter(Usuario.correo == data.correo).first()
@@ -243,11 +244,7 @@ def password_recovery(
     """
     try:
         # Enviar en background para no bloquear la petición
-        from fastapi import BackgroundTasks
-        # If a BackgroundTasks instance is not available via dependency, we schedule via a local one
-        # FastAPI will normally provide BackgroundTasks when added to the endpoint signature; here we use a best-effort.
-        background = BackgroundTasks()
-        background.add_task(send_email, user.correo, subject, body)
+        background_tasks.add_task(send_email, user.correo, subject, body)
     except Exception as e:
         print(f"⚠️ No se pudo programar envío de correo de recuperación: {e}")
         traceback.print_exc()
